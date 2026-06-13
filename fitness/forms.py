@@ -71,7 +71,7 @@ class ExerciseCreateForm(forms.ModelForm):
 
 class WorkoutSessionCreateForm(forms.ModelForm):
     clients = forms.ModelMultipleChoiceField(
-        queryset=Exercise.objects.all(), widget=forms.CheckboxSelectMultiple
+        queryset=Client.objects.all(), widget=forms.CheckboxSelectMultiple
     )
     exercises = forms.ModelMultipleChoiceField(
         queryset=Exercise.objects.all(), widget=forms.CheckboxSelectMultiple
