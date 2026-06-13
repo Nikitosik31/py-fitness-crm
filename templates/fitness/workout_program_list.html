@@ -1,0 +1,250 @@
+{% extends "layouts/base-presentation.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .page-header-left .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 6px;
+    }
+
+    .page-header-left h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .btn-create {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      background: var(--accent-blue);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-create:hover { opacity: 0.88; transform: translateY(-1px); color: #fff; }
+
+    /* List */
+    .program-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .program-item {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+
+    .program-item:hover {
+      border-color: rgba(155,93,229,0.25);
+      background: var(--bg-card-hover);
+      transform: translateX(3px);
+    }
+
+    .program-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .program-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .program-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .program-type {
+      display: inline-block;
+      padding: 2px 9px;
+      background: rgba(155,93,229,0.1);
+      border: 1px solid rgba(155,93,229,0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #B07EF0;
+      width: fit-content;
+    }
+
+    .program-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .prog-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .prog-badge-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .prog-badge-label {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-secondary);
+    }
+
+    .prog-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--border);
+    }
+
+    /* Search bar */
+    .search-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .search-wrap { position: relative; flex: 1; max-width: 420px; }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }
+    .search-input { width: 100%; height: 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0 14px 0 38px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text-primary); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+    .search-input::placeholder { color: var(--text-secondary); }
+    .search-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(67,97,238,0.12); }
+    .search-btn { height: 40px; padding: 0 16px; background: var(--accent-blue); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.15s; white-space: nowrap; }
+    .search-btn:hover { opacity: 0.88; }
+    .search-clear { height: 40px; padding: 0 14px; background: transparent; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary); font-family: 'Inter', sans-serif; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; transition: color 0.15s, border-color 0.15s; }
+    .search-clear:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .search-results-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+    .search-results-label strong { color: var(--text-primary); }
+
+    /* Empty */
+    .empty-state {
+      padding: 60px 24px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; margin: 0; }
+
+    @media (max-width: 560px) {
+      .program-item { grid-template-columns: 36px 1fr; }
+      .program-right { display: none; }
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="eyebrow">Fitness CRM</div>
+      <h1>Workout Programs</h1>
+    </div>
+    <a href="{% url 'fitness:workout-program-create' %}" class="btn-create">
+      + Create Program
+    </a>
+  </div>
+
+  <form method="get" action="" class="search-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" name="workout_program" class="search-input" placeholder="Search by program name..." value="{{ request.GET.workout_program }}" autocomplete="off">
+    </div>
+    <button type="submit" class="search-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </button>
+    {% if request.GET.workout_program %}
+      <a href="{% url 'fitness:workout-program-list' %}" class="search-clear">✕ Clear</a>
+    {% endif %}
+  </form>
+  {% if request.GET.workout_program %}
+    <div class="search-results-label">Results for <strong>"{{ request.GET.workout_program }}"</strong> — {{ workoutprogram_list|length }} found</div>
+  {% endif %}
+
+  <div class="page-header" style="margin-bottom:0;">
+  </div>
+
+  {% if workoutprogram_list %}
+  <div class="program-list">
+    {% for program in workoutprogram_list %}
+    <a href="{% url 'fitness:workout-program-detail' pk=program.id %}" class="program-item">
+
+      <div class="program-num">#{{ program.id }}</div>
+
+      <div class="program-main">
+        <div class="program-name">{{ program.name }}</div>
+        <span class="program-type">{{ program.workout_type.name }}</span>
+      </div>
+
+      <div class="program-right">
+        <div class="prog-badge">
+          <div class="prog-badge-val">{{ program.exercises.count }}</div>
+          <div class="prog-badge-label">Exercises</div>
+        </div>
+        <div class="prog-divider"></div>
+        <div class="prog-badge">
+          <div class="prog-badge-val">{{ program.workout_sessions.count }}</div>
+          <div class="prog-badge-label">Sessions</div>
+        </div>
+      </div>
+
+    </a>
+    {% endfor %}
+  </div>
+
+  {% include "includes/pagination.html" %}
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">📋</div>
+    <p>No workout programs found.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

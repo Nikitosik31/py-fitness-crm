@@ -1,0 +1,301 @@
+{% extends "layouts/base-presentation.html" %}
+
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    /* Hero */
+    .client-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .client-hero-left { display: flex; flex-direction: column; gap: 10px; }
+
+    .client-id-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+    }
+
+    .client-fullname {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      line-height: 1.1;
+    }
+
+    .client-goal-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(255,107,53,0.1);
+      border: 1px solid rgba(255,107,53,0.2);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-orange);
+      width: fit-content;
+    }
+
+    .client-hero-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+
+    .client-pills { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .client-pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .client-pill b { color: var(--text-primary); font-weight: 600; }
+
+    .hero-actions { display: flex; gap: 8px; }
+
+    .btn-action {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 9px;
+      font-size: 13px; font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-action:hover { opacity: 0.82; transform: translateY(-1px); }
+    .btn-update { background: rgba(67,97,238,0.1); border: 1px solid rgba(67,97,238,0.22); color: var(--accent-blue); }
+    .btn-delete { background: rgba(255,75,75,0.08); border: 1px solid rgba(255,75,75,0.18); color: #FF4B4B; }
+
+    /* Stats grid */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .stat-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .stat-block-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .stat-block-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    a .workout-name {
+      text-decoration: none;
+    }
+
+    .trainer-row a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.15s;
+    }
+
+    .trainer-row a:hover {
+      opacity: 0.75;
+}
+
+    .stat-block-value.green { color: var(--accent-green); }
+
+    /* Bottom grid */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .info-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .info-block-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    /* Trainers list */
+    .trainer-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-primary);
+    }
+
+    .trainer-row:last-child { border-bottom: none; }
+
+    .trainer-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      flex-shrink: 0;
+    }
+
+    /* Last workout */
+    .workout-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .workout-date { font-size: 12px; color: var(--text-secondary); }
+
+    /* Assign button */
+    .assign-form { margin-top: 14px; }
+
+    .btn-assign {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-assign:hover { opacity: 0.82; transform: translateY(-1px); }
+
+    .btn-assign-add {
+      background: rgba(6,214,160,0.1);
+      border: 1px solid rgba(6,214,160,0.2) !important;
+      color: var(--accent-green);
+    }
+
+    .btn-assign-remove {
+      background: rgba(255,75,75,0.08);
+      border: 1px solid rgba(255,75,75,0.18) !important;
+      color: #FF4B4B;
+    }
+
+    /* Empty */
+    .empty-text { font-size: 13px; color: var(--text-secondary); }
+
+    @media (max-width: 640px) {
+      .client-hero { flex-direction: column; }
+      .client-hero-right { align-items: flex-start; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .client-fullname { font-size: 28px; }
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <!-- Hero -->
+  <div class="client-hero">
+    <div class="client-hero-left">
+      <div class="client-id-label">Client #{{ client.id }}</div>
+      <div class="client-fullname">{{ client.first_name }} {{ client.last_name }}</div>
+      <span class="client-goal-tag">🎯 {{ client.goal }}</span>
+    </div>
+    <div class="client-hero-right">
+      <div class="client-pills">
+        <span class="client-pill">Age <b>{{ client.age }}</b></span>
+        <span class="client-pill">Weight <b>{{ client.weight }} kg</b></span>
+        <span class="client-pill">Trainers <b>{{ client.trainers.count }}</b></span>
+      </div>
+      <div class="hero-actions">
+        <a href="{% url 'fitness:clients-update' pk=client.id %}" class="btn-action btn-update">✏️ Update</a>
+        <a href="{% url 'fitness:clients-delete' pk=client.id %}" class="btn-action btn-delete">🗑 Delete</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-block">
+      <div class="stat-block-label">Completed Workouts</div>
+      <div class="stat-block-value green">{{ completed_workouts }}</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-block-label">Upcoming Workouts</div>
+      <div class="stat-block-value">{{ upcoming_workouts }}</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-block-label">Assigned Trainers</div>
+      <div class="stat-block-value">{{ client.trainers.count }}</div>
+    </div>
+  </div>
+
+  <!-- Bottom -->
+  <div class="bottom-grid">
+
+    <!-- Trainers -->
+    <div class="info-block">
+      <div class="info-block-title">Trainers</div>
+      {% for trainer in client.trainers.all %}
+        <div class="trainer-row">
+          <div class="trainer-dot"></div>
+          <a href="{% url 'fitness:trainers-detail' pk=trainer.id %}">
+            {{ trainer.first_name }} {{ trainer.last_name }}
+          </a>
+        </div>
+      {% empty %}
+        <div class="empty-text">No trainers assigned.</div>
+      {% endfor %}
+    </div>
+
+    <!-- Last workout + assign -->
+    <div class="info-block">
+      <div class="info-block-title">Last Workout</div>
+      {% if client.workout_sessions.first %}
+        <a href="{% url 'fitness:workout-program-detail' pk=client.workout_sessions.first.workout_program.pk %}" style="text-decoration: none; color: inherit;">
+          <div class="workout-name">{{ client.workout_sessions.first }}</div>
+        </a>
+          <div class="workout-date">Most recent session</div>
+
+      {% else %}
+        <div class="empty-text">No workouts yet.</div>
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

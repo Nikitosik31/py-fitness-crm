@@ -1,0 +1,69 @@
+{% if is_paginated %}
+<div class="crm-pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="crm-page-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+  {% else %}
+    <span class="crm-page-btn disabled">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </span>
+  {% endif %}
+
+  <span class="crm-page-info">
+    {{ page_obj.number }} <span style="color:#8892A4;">of</span> {{ paginator.num_pages }}
+  </span>
+
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="crm-page-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  {% else %}
+    <span class="crm-page-btn disabled">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </span>
+  {% endif %}
+</div>
+{% endif %}
+
+<style>
+  .crm-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px 0;
+  }
+
+  .crm-page-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: #16191F;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #F0F2F5;
+    text-decoration: none;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .crm-page-btn:hover:not(.disabled) {
+    background: rgba(67, 97, 238, 0.15);
+    border-color: #4361EE;
+    color: #4361EE;
+  }
+
+  .crm-page-btn.disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .crm-page-info {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #F0F2F5;
+    padding: 0 8px;
+  }
+</style>

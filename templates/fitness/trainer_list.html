@@ -1,0 +1,364 @@
+{% extends "layouts/base-presentation.html" %}
+
+{% load static %}
+{% load crispy_forms_filters %}
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .page-header-left .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 6px;
+    }
+
+    .page-header-left h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .btn-create {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      background: var(--accent-blue);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-create:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+      color: #fff;
+    }
+
+    /* Table */
+    .crm-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: auto;
+    }
+
+    .crm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .crm-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .crm-table th {
+      padding: 13px 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .crm-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .crm-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .crm-table tbody tr:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .crm-table td {
+      padding: 14px 20px;
+      color: var(--text-primary);
+      vertical-align: middle;
+    }
+
+    .crm-table td.muted {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .trainer-link {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.15s;
+    }
+
+    .trainer-link:hover { opacity: 0.75; }
+
+    .me-badge {
+      display: inline-block;
+      margin-left: 6px;
+      padding: 2px 7px;
+      background: rgba(6, 214, 160, 0.12);
+      border: 1px solid rgba(6, 214, 160, 0.25);
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--accent-green);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    .id-cell {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .spec-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      background: rgba(67, 97, 238, 0.1);
+      border: 1px solid rgba(67, 97, 238, 0.2);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--accent-blue);
+      font-weight: 500;
+    }
+
+    .exp-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .exp-unit {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-left: 3px;
+    }
+
+    /* Search bar */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0 14px 0 38px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .search-input::placeholder { color: var(--text-secondary); }
+
+    .search-input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(67,97,238,0.12);
+    }
+
+    .search-btn {
+      height: 40px;
+      padding: 0 16px;
+      background: var(--accent-blue);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover { opacity: 0.88; }
+
+    .search-clear {
+      height: 40px;
+      padding: 0 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .search-clear:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+
+    .search-results-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .search-results-label strong { color: var(--text-primary); }
+
+    /* Empty state */
+    .empty-state {
+      padding: 60px 24px;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      margin: 0;
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="eyebrow">Fitness CRM</div>
+      <h1>Trainers</h1>
+    </div>
+    <a href="{% url 'fitness:trainers-create' %}" class="btn-create">
+      + Create Trainer
+    </a>
+  </div>
+
+  <form method="get" action="" class="search-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input
+        type="text"
+        name="trainer"
+        class="search-input"
+        placeholder="Search by name or username..."
+        value="{{ request.GET.trainer }}"
+        autocomplete="off"
+      >
+    </div>
+    <button type="submit" class="search-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      Search
+    </button>
+    {% if request.GET.trainer %}
+      <a href="{% url 'fitness:trainers-list' %}" class="search-clear">✕ Clear</a>
+    {% endif %}
+  </form>
+
+  {% if request.GET.trainer %}
+    <div class="search-results-label">
+      Results for <strong>"{{ request.GET.trainer }}"</strong> — {{ trainer_list|length }} found
+    </div>
+  {% endif %}
+
+  <div class="crm-table-wrap">
+    {% if trainer_list %}
+    <table class="crm-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Clients</th>
+          <th>Specialization</th>
+          <th>Experience</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for trainer in trainer_list %}
+        <tr onclick="window.location='{{ trainer.get_absolute_url }}'" style="cursor:pointer;">
+          <td class="id-cell">#{{ trainer.id }}</td>
+          <td>
+            <span class="spec-tag">{{ trainer.username }}</span>
+            {% if user == trainer %}<span class="me-badge">Me</span>{% endif %}
+          </td>
+          <td>{{ trainer.first_name }}</td>
+          <td>{{ trainer.last_name }}</td>
+          <td>{{ trainer.clients.count }}</td>
+          <td>
+            {% for specialization in trainer.specialization.all %}
+              <span class="spec-tag">
+                {{ specialization.name }}
+              </span>
+            {% empty %}
+              <span class="muted">No specialization</span>
+            {% endfor %}
+          </td>
+          <td>
+            <span class="exp-value">{{ trainer.experience_years }}</span>
+            <span class="exp-unit">yr{{ trainer.experience_years|pluralize }}</span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">🏋️</div>
+      <p>There are no trainers in the CRM yet.</p>
+    </div>
+    {% endif %}
+  </div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

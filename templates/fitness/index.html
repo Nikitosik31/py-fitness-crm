@@ -1,0 +1,106 @@
+{% extends "layouts/base-presentation.html" %}
+{% load static %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <!-- Header -->
+  <div class="crm-header">
+    <div class="crm-header-left">
+      <div class="eyebrow">Fitness CRM</div>
+      <h1>Welcome back,<br><span>Overview</span></h1>
+    </div>
+    <div class="visit-badge">
+      <span class="dot"></span>
+      Visit <strong>{{ num_visits }}</strong>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="section-label">Platform stats</div>
+  <div class="stats-grid">
+
+    <a href="{% url 'fitness:trainers-list' %}" class="stat-card blue" style="text-decoration:none;">
+        <div class="stat-icon">🏋️</div>
+        <div class="stat-value">{{ num_trainer }}</div>
+        <div class="stat-label">Trainers</div>
+    </a>
+
+    <a href="{% url 'fitness:clients-list' %}" class="stat-card green" style="text-decoration:none;">
+      <div class="stat-icon">👤</div>
+      <div class="stat-value">{{ num_clients }}</div>
+      <div class="stat-label">Clients</div>
+    </a>
+
+    <a href="{% url 'fitness:workout-program-list' %}" class="stat-card orange" style="text-decoration:none;">
+      <div class="stat-icon">📋</div>
+      <div class="stat-value">{{ num_program }}</div>
+      <div class="stat-label">Programs</div>
+    </a>
+
+    <a href="{% url 'fitness:workout-session-list' %}" class="stat-card purple" style="text-decoration:none;">
+      <div class="stat-icon">📅</div>
+      <div class="stat-value">{{ num_sessions }}</div>
+      <div class="stat-label">Sessions</div>
+    </a>
+
+    <a href="{% url 'fitness:exercise-list' %}" class="stat-card yellow" style="text-decoration:none;">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-value">{{ num_exercise }}</div>
+      <div class="stat-label">Exercises</div>
+    </a>
+
+  </div>
+
+  <!-- Bottom row -->
+  <div class="section-label">Quick reference</div>
+  <div class="info-row">
+
+    <div class="info-card">
+      <h3>Entity overview</h3>
+      <ul class="quick-list">
+        <li>
+          <span class="ql-label"><span class="ql-dot" style="background:#4361EE"></span>Trainers</span>
+          <span class="ql-count" style="color:#4361EE">{{ num_trainer }}</span>
+        </li>
+        <li>
+          <span class="ql-label"><span class="ql-dot" style="background:#06D6A0"></span>Clients</span>
+          <span class="ql-count" style="color:#06D6A0">{{ num_clients }}</span>
+        </li>
+        <li>
+          <span class="ql-label"><span class="ql-dot" style="background:#FF6B35"></span>Programs</span>
+          <span class="ql-count" style="color:#FF6B35">{{ num_program }}</span>
+        </li>
+        <li>
+          <span class="ql-label"><span class="ql-dot" style="background:#9B5DE5"></span>Sessions</span>
+          <span class="ql-count" style="color:#9B5DE5">{{ num_sessions }}</span>
+        </li>
+        <li>
+          <span class="ql-label"><span class="ql-dot" style="background:#FFD166"></span>Exercises</span>
+          <span class="ql-count" style="color:#FFD166">{{ num_exercise }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:8px;">
+      <div style="font-size:48px; line-height:1;">💪</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:700; color:#F0F2F5;">
+        {{ num_clients }}
+      </div>
+      <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#8892A4; font-weight:600;">
+        Active clients
+      </div>
+      <div style="margin-top:8px; font-size:13px; color:#8892A4;">
+        across <span style="color:#4361EE; font-weight:600;">{{ num_trainer }}</span> trainer{{ num_trainer|pluralize }}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+

@@ -1,0 +1,448 @@
+{% extends "layouts/base-presentation.html" %}
+
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    /* Hero card */
+    .trainer-hero {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+    }
+
+    .trainer-avatar-block {
+      background: rgba(67,97,238,0.07);
+      border-right: 1px solid rgba(67,97,238,0.12);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .trainer-avatar {
+      width: 68px; height: 68px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .trainer-name-block .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 4px;
+    }
+
+    .trainer-name-block h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(18px, 2vw, 22px);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 6px;
+    }
+
+    .trainer-spec {
+      display: inline-block;
+      padding: 3px 12px;
+      background: rgba(67, 97, 238, 0.1);
+      border: 1px solid rgba(67, 97, 238, 0.2);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--accent-blue);
+      font-weight: 500;
+      margin: 2px;
+    }
+
+    /* Right column */
+    .trainer-hero-right-col {
+      background: var(--bg-card);
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Full name */
+    .trainer-fullname {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--accent-blue);
+    }
+
+    .trainer-fullname .fname { color: var(--accent-blue); }
+    .trainer-fullname .lname { color: var(--accent-purple); }
+
+    /* Action buttons */
+    .trainer-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-action:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    .btn-update {
+      background: rgba(67, 97, 238, 0.12);
+      border: 1px solid rgba(67, 97, 238, 0.25);
+      color: var(--accent-blue);
+    }
+
+    .btn-delete {
+      background: rgba(255, 75, 75, 0.1);
+      border: 1px solid rgba(255, 75, 75, 0.2);
+      color: #FF4B4B;
+    }
+
+    /* Info grid */
+    .trainer-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 16px;
+      justify-content: start;
+    }
+
+    .info-pill {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+    }
+
+    .info-pill-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .info-pill-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .staff-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; }
+    .staff-badge.yes { color: var(--accent-green); }
+    .staff-badge.no  { color: var(--text-secondary); }
+
+    /* Clients section */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .client-count {
+      background: rgba(67, 97, 238, 0.12);
+      border: 1px solid rgba(67, 97, 238, 0.2);
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 12px;
+      color: var(--accent-blue);
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Client cards */
+    .clients-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .client-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+      display: block;
+      text-decoration: none;
+    }
+
+    .client-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent-green);
+      opacity: 0.6;
+    }
+
+    .client-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(6, 214, 160, 0.3);
+      background: var(--bg-card-hover);
+    }
+
+    .client-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .client-avatar {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(6,214,160,0.2), rgba(6,214,160,0.05));
+      border: 1px solid rgba(6,214,160,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .client-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .client-id { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    .client-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .client-stat {
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    .client-stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 3px;
+    }
+
+    .client-stat-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .client-goal {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255, 107, 53, 0.08);
+      border: 1px solid rgba(255, 107, 53, 0.15);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--accent-orange);
+      font-weight: 500;
+    }
+
+    /* Empty state */
+    .empty-clients {
+      padding: 48px 24px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .empty-clients .empty-icon { font-size: 36px; margin-bottom: 10px; }
+    .empty-clients p { font-size: 14px; color: var(--text-secondary); margin: 0; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .trainer-hero { grid-template-columns: 1fr; }
+      .trainer-avatar-block { border-right: none; border-bottom: 1px solid rgba(67,97,238,0.12); }
+      .trainer-actions { justify-content: flex-start; }
+      .trainer-info-grid { grid-template-columns: repeat(2, auto); }
+      .trainer-fullname { font-size: 22px; }
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .trainer-hero {
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .section-header {
+      animation: fadeUp 0.4s ease 0.15s both;
+    }
+
+    .client-card {
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .client-card:nth-child(1) { animation-delay: 0.20s; }
+    .client-card:nth-child(2) { animation-delay: 0.25s; }
+    .client-card:nth-child(3) { animation-delay: 0.30s; }
+    .client-card:nth-child(4) { animation-delay: 0.35s; }
+    .client-card:nth-child(5) { animation-delay: 0.40s; }
+    .client-card:nth-child(6) { animation-delay: 0.45s; }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <div class="trainer-hero">
+
+    <!-- Left: avatar + username + specialization -->
+    <div class="trainer-avatar-block">
+      <div class="trainer-avatar">🏋️</div>
+      <div class="trainer-name-block">
+        <div class="eyebrow">Trainer Profile</div>
+        <h1>{{ trainer.username }}</h1>
+        {% for specialization in trainer.specialization.all %}
+          <span class="trainer-spec">{{ specialization.name }}</span>
+        {% empty %}
+          <span class="trainer-spec" style="opacity:.5;">No specialization</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right: fullname + actions + info pills -->
+    <div class="trainer-hero-right-col">
+
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+        <div class="trainer-fullname">
+          {{ trainer.first_name }} {{ trainer.last_name }}
+        </div>
+        <div class="trainer-actions">
+          <a href="{% url 'fitness:trainers-update' pk=trainer.id %}" class="btn-action btn-update">
+            ✏️ Update
+          </a>
+          <a href="{% url 'fitness:trainers-delete' pk=trainer.id %}" class="btn-action btn-delete">
+            🗑 Delete
+          </a>
+        </div>
+      </div>
+
+      <div class="trainer-info-grid">
+        <div class="info-pill">
+          <div class="info-pill-label">Experience</div>
+          <div class="info-pill-value">{{ trainer.experience_years }} yr{{ trainer.experience_years|pluralize }}</div>
+        </div>
+        <div class="info-pill">
+          <div class="info-pill-label">Email</div>
+          <div class="info-pill-value">{{ trainer.email }}</div>
+        </div>
+        <div class="info-pill">
+          <div class="info-pill-label">Clients</div>
+          <div class="info-pill-value">{{ trainer.clients.count }}</div>
+        </div>
+        <div class="info-pill">
+          <div class="info-pill-label">Joined</div>
+          <div class="info-pill-value">{{ trainer.date_joined|date:"d.m.Y" }}</div>
+        </div>
+        <div class="info-pill">
+          <div class="info-pill-label">Staff</div>
+          <div class="info-pill-value">
+            {% if trainer.is_staff %}
+              <span class="staff-badge yes">✔ Yes</span>
+            {% else %}
+              <span class="staff-badge no">✘ No</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Clients -->
+  <div class="section-header">
+    <div class="section-title">
+      Clients
+      <span class="client-count">{{ trainer.clients.count }}</span>
+    </div>
+  </div>
+
+  {% if trainer.clients.all %}
+  <div class="clients-grid">
+    {% for client in trainer.clients.all %}
+    <a href="{% url 'fitness:clients-detail' pk=client.id %}" class="client-card">
+      <div class="client-card-header">
+        <div class="client-avatar">👤</div>
+        <div>
+          <div class="client-name">{{ client.first_name }} {{ client.last_name }}</div>
+          <div class="client-id">#{{ client.id }}</div>
+        </div>
+      </div>
+      <div class="client-stats">
+        <div class="client-stat">
+          <div class="client-stat-label">Age</div>
+          <div class="client-stat-value">{{ client.age }}</div>
+        </div>
+        <div class="client-stat">
+          <div class="client-stat-label">Weight</div>
+          <div class="client-stat-value">{{ client.weight }} kg</div>
+        </div>
+      </div>
+      <div class="client-goal">
+        🎯 {{ client.goal }}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-clients">
+    <div class="empty-icon">👥</div>
+    <p>No clients assigned to this trainer yet.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

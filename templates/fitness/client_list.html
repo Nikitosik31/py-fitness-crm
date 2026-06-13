@@ -1,0 +1,296 @@
+{% extends "layouts/base-presentation.html" %}
+{% load crispy_forms_filters %}
+
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .page-header-left .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 6px;
+    }
+
+    .page-header-left h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .btn-create {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      background: var(--accent-blue);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-create:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+      color: #fff;
+    }
+
+    /* List */
+    .client-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .client-item {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+
+    .client-item:hover {
+      border-color: rgba(67,97,238,0.25);
+      background: var(--bg-card-hover);
+      transform: translateX(3px);
+    }
+
+    .client-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .client-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .client-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .client-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .meta-chip {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .meta-chip b {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .meta-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--text-secondary);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    .goal-tag {
+      display: inline-block;
+      padding: 2px 9px;
+      background: rgba(255,107,53,0.1);
+      border: 1px solid rgba(255,107,53,0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-orange);
+    }
+
+    .trainer-tag {
+      font-size: 12px;
+      color: var(--accent-blue);
+      font-weight: 500;
+    }
+
+    /* Right side */
+    .client-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .completed-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(6,214,160,0.1);
+      border: 1px solid rgba(6,214,160,0.2);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-green);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .completed-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      flex-shrink: 0;
+    }
+
+    .upcoming-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    .upcoming-label b {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Search bar */
+    .search-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+    .search-wrap { position: relative; flex: 1; max-width: 420px; }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); pointer-events: none; }
+    .search-input { width: 100%; height: 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0 14px 0 38px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text-primary); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+    .search-input::placeholder { color: var(--text-secondary); }
+    .search-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(67,97,238,0.12); }
+    .search-btn { height: 40px; padding: 0 16px; background: var(--accent-blue); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.15s; white-space: nowrap; }
+    .search-btn:hover { opacity: 0.88; }
+    .search-clear { height: 40px; padding: 0 14px; background: transparent; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary); font-family: 'Inter', sans-serif; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; transition: color 0.15s, border-color 0.15s; }
+    .search-clear:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .search-results-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+    .search-results-label strong { color: var(--text-primary); }
+
+    /* Empty state */
+    .empty-state {
+      padding: 60px 24px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; margin: 0; }
+
+    @media (max-width: 600px) {
+      .client-item { grid-template-columns: 36px 1fr; }
+      .client-right { display: none; }
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="eyebrow">Fitness CRM</div>
+      <h1>Clients</h1>
+    </div>
+    <a href="{% url 'fitness:clients-create' %}" class="btn-create">
+      + Create Client
+    </a>
+  </div>
+
+  <form method="get" action="" class="search-bar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" name="client" class="search-input" placeholder="Search by name..." value="{{ request.GET.client }}" autocomplete="off">
+    </div>
+    <button type="submit" class="search-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Search
+    </button>
+    {% if request.GET.client %}
+      <a href="{% url 'fitness:clients-list' %}" class="search-clear">✕ Clear</a>
+    {% endif %}
+  </form>
+  {% if request.GET.client %}
+    <div class="search-results-label">Results for <strong>"{{ request.GET.client }}"</strong> — {{ client_list|length }} found</div>
+  {% endif %}
+
+  <div class="page-header" style="margin-bottom:0;">
+  </div>
+
+  {% if client_list %}
+  <div class="client-list">
+    {% for client in client_list %}
+    <a href="{% url 'fitness:clients-detail' pk=client.id %}" class="client-item">
+
+      <div class="client-num">#{{ client.id }}</div>
+
+      <div class="client-main">
+        <div class="client-name">{{ client.first_name }} {{ client.last_name }}</div>
+        <div class="client-meta">
+          <span class="meta-chip">Age <b>{{ client.age }}</b></span>
+          <span class="meta-dot"></span>
+          <span class="meta-chip">Weight <b>{{ client.weight }} kg</b></span>
+          <span class="meta-dot"></span>
+          <span class="goal-tag">{{ client.goal }}</span>
+          <span class="meta-dot"></span>
+          {% for trainer in client.trainers.all %}
+            <span class="trainer-tag">{{ trainer.username }}{% if not forloop.last %}, {% endif %}</span>
+          {% empty %}
+            <span class="meta-chip">No trainers</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="client-right">
+        <span class="completed-badge">{{ client.completed_workouts }} done</span>
+        <span class="upcoming-label"><b>{{ client.upcoming_workouts }}</b> upcoming</span>
+      </div>
+
+    </a>
+    {% endfor %}
+  </div>
+
+  {% include "includes/pagination.html" %}
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">👤</div>
+    <p>There are no clients in the CRM yet.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "layouts/base-presentation.html" %}
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    .delete-wrap {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .delete-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 75, 75, 0.2);
+      border-radius: 20px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .delete-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #FF4B4B, #FF6B35);
+    }
+
+    .delete-card::after {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: #FF4B4B;
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    .delete-icon {
+      width: 64px; height: 64px;
+      background: rgba(255, 75, 75, 0.1);
+      border: 1px solid rgba(255, 75, 75, 0.2);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px;
+    }
+
+    .delete-card h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 10px;
+    }
+
+    .delete-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0 0 28px;
+      line-height: 1.6;
+    }
+
+    .delete-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-confirm-delete {
+      flex: 1;
+      padding: 12px;
+      background: rgba(255, 75, 75, 0.12);
+      border: 1px solid rgba(255, 75, 75, 0.3);
+      color: #FF4B4B;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .btn-confirm-delete:hover {
+      background: rgba(255, 75, 75, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .btn-cancel:hover {
+      color: var(--text-primary);
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.04);
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+  <div class="delete-wrap">
+    <div class="delete-card">
+
+      <div class="delete-icon">🗑</div>
+      <h1>Delete Trainer?</h1>
+      <p>This action cannot be undone.<br>The trainer will be permanently removed from the CRM.</p>
+
+      <form action="" method="post">
+        {% csrf_token %}
+        <div class="delete-actions">
+          <button type="submit" class="btn-confirm-delete">
+            Yes, Delete
+          </button>
+          <a href="{% url 'fitness:trainers-list' %}" class="btn-cancel">
+            Cancel
+          </a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

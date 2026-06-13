@@ -1,0 +1,107 @@
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
+
+
+class Trainer(AbstractUser):
+    specialization = models.ManyToManyField("Specialization", related_name="trainers")
+    experience_years = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "trainer"
+        verbose_name_plural = "trainers"
+
+    def __str__(self):
+        return f"{self.username} ({self.first_name} {self.last_name})"
+
+    def get_absolute_url(self):
+        return reverse("fitness:trainers-detail", kwargs={"pk": self.pk})
+
+
+class Client(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    age = models.PositiveIntegerField()
+    weight = models.DecimalField(max_digits=5, decimal_places=2)
+    goal = models.TextField()
+    trainers = models.ManyToManyField(Trainer, related_name="clients")
+
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+
+    class Meta:
+        ordering = ["first_name", "last_name"]
+
+
+class Exercise(models.Model):
+    name = models.CharField(max_length=255)
+    muscle_group = models.CharField(max_length=255)
+    description = models.TextField()
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class WorkoutSession(models.Model):
+    clients = models.ManyToManyField(
+        Client,
+        related_name="workout_sessions"
+    )
+    workout_program = models.ForeignKey("WorkoutProgram", on_delete=models.CASCADE, related_name="workout_sessions")
+    date = models.DateField()
+    duration_minutes = models.PositiveIntegerField()
+    trainer = models.ForeignKey(
+        Trainer,
+        on_delete=models.CASCADE,
+        related_name="workout_sessions"
+    )
+    is_completed = models.BooleanField(default=False)
+    max_participants = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self):
+        return f"{self.workout_program.name} - {self.date}"
+
+class WorkoutProgram(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    exercises = models.ManyToManyField(Exercise, related_name="workout_programs")
+    workout_type = models.ForeignKey(
+        "WorkoutType",
+        on_delete=models.CASCADE,
+        related_name="workout_programs",
+    )
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Specialization(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+class WorkoutType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+            ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+

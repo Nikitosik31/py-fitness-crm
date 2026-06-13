@@ -1,0 +1,108 @@
+{% extends "layouts/base-presentation.html" %}
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    .logout-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .logout-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .logout-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #4361EE, #9B5DE5);
+    }
+
+    .logout-icon {
+      width: 68px; height: 68px;
+      background: rgba(67,97,238,0.1);
+      border: 1px solid rgba(67,97,238,0.2);
+      border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px;
+    }
+
+    .logout-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .logout-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .btn-login {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: var(--accent-blue);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-login:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+      color: #fff;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="logout-page">
+  <div class="logout-card">
+
+    <div class="logout-icon">👋</div>
+    <div class="logout-title">You've been logged out</div>
+    <div class="logout-subtitle">Thanks for using FitnessCRM.<br>See you next time!</div>
+
+    <a href="{% url 'login' %}" class="btn-login">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+        <polyline points="10 17 15 12 10 7"/>
+        <line x1="15" y1="12" x2="3" y2="12"/>
+      </svg>
+      Sign in again
+    </a>
+
+  </div>
+</div>
+{% endblock %}

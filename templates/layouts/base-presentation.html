@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/png" href="{{ ASSETS_ROOT }}/img/favicon.png">
+
+  <title>FitnessCRM — {% block title %}Dashboard{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary: #0F1117;
+      --bg-card: #16191F;
+      --accent-blue: #4361EE;
+      --accent-green: #06D6A0;
+      --text-primary: #F0F2F5;
+      --text-secondary: #8892A4;
+      --border: rgba(255,255,255,0.06);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main { flex: 1; }
+
+    a { color: inherit; }
+
+    ::selection {
+      background: rgba(67, 97, 238, 0.35);
+      color: #fff;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+  </style>
+
+  {% block stylesheets %}{% endblock stylesheets %}
+</head>
+
+<body>
+
+  {% include "includes/navigation.html" %}
+  <main>
+    {% block content %}{% endblock content %}
+  </main>
+
+  {% include "includes/footer.html" %}
+
+  <!-- Bootstrap JS (keeping for compatibility) -->
+  <script src="{{ ASSETS_ROOT }}/js/core/popper.min.js"></script>
+  <script src="{{ ASSETS_ROOT }}/js/core/bootstrap.min.js"></script>
+
+  {% block javascripts %}{% endblock javascripts %}
+
+</body>
+</html>

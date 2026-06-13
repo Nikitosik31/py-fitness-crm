@@ -1,0 +1,321 @@
+{% extends "layouts/base-presentation.html" %}
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    /* Hero */
+    .session-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .session-banner {
+      height: 3px;
+      background: linear-gradient(90deg, #4361EE, #9B5DE5);
+    }
+
+    .session-hero-body {
+      padding: 24px 28px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .session-hero-left .eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 5px;
+    }
+
+    .session-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .session-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+
+    .type-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(155,93,229,0.1);
+      border: 1px solid rgba(155,93,229,0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #9B5DE5;
+      margin-bottom: 8px;
+    }
+
+    .session-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-action:hover { opacity: 0.82; transform: translateY(-1px); }
+    .btn-update { background: rgba(67,97,238,0.1); border: 1px solid rgba(67,97,238,0.22); color: var(--accent-blue); }
+    .btn-delete { background: rgba(255,75,75,0.08); border: 1px solid rgba(255,75,75,0.18); color: #FF4B4B; }
+
+    /* Status badges */
+    .status-done {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(6,214,160,0.1);
+      border: 1px solid rgba(6,214,160,0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+
+    .status-done::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+
+    .status-plan {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(67,97,238,0.1);
+      border: 1px solid rgba(67,97,238,0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-blue);
+    }
+
+    .status-plan::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+    }
+
+    /* Info pills */
+    .session-pills {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 10px;
+      justify-content: start;
+      margin-bottom: 16px;
+    }
+
+    .session-pill {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+
+    .pill-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .pill-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .pill-value a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .pill-value a:hover { opacity: 0.75; }
+
+    /* Participants */
+    .participants-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .participants-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .participants-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-secondary);
+    }
+
+    .participants-count {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1px 9px;
+    }
+
+    .participant-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .participant-row:last-child { border-bottom: none; }
+
+    .participant-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      flex-shrink: 0;
+    }
+
+    .participant-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent-blue);
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+
+    .participant-link:hover { opacity: 0.75; }
+
+    .empty-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 8px 0;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .session-hero { animation: fadeUp 0.35s ease both; }
+    .session-pills { animation: fadeUp 0.35s ease 0.08s both; }
+    .participants-card { animation: fadeUp 0.35s ease 0.14s both; }
+
+    @media (max-width: 560px) {
+      .session-hero-body { flex-direction: column; }
+      .session-actions { width: 100%; }
+      .btn-action { flex: 1; justify-content: center; }
+      .session-pills { grid-template-columns: repeat(2, auto); }
+    }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <!-- Hero -->
+  <div class="session-hero">
+    <div class="session-banner"></div>
+    <div class="session-hero-body">
+      <div class="session-hero-left">
+        <div class="eyebrow">Workout Session</div>
+        <div class="session-title">{{ workoutsession.workout_program }}</div>
+        {% if workoutsession.workout_program.workout_type %}
+          <span class="type-pill">{{ workoutsession.workout_program.workout_type }}</span>
+        {% endif %}
+        <div class="session-date">{{ workoutsession.date }} · {{ workoutsession.duration_minutes }} min</div>
+        {% if workoutsession.is_completed %}
+          <span class="status-done">Completed</span>
+        {% else %}
+          <span class="status-plan">Planned</span>
+        {% endif %}
+      </div>
+      <div class="session-actions">
+        <a href="{% url 'fitness:workout-session-update' pk=workoutsession.id %}" class="btn-action btn-update">✏️ Update</a>
+        <a href="{% url 'fitness:workout-session-delete' pk=workoutsession.id %}" class="btn-action btn-delete">🗑 Delete</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info pills -->
+  <div class="session-pills">
+    <div class="session-pill">
+      <div class="pill-label">Program</div>
+      <div class="pill-value">{{ workoutsession.workout_program }}</div>
+    </div>
+    <div class="session-pill">
+      <div class="pill-label">Trainer</div>
+      <div class="pill-value">
+        <a href="{% url 'fitness:trainers-detail' pk=workoutsession.trainer.id %}">{{ workoutsession.trainer }}</a>
+      </div>
+    </div>
+    <div class="session-pill">
+      <div class="pill-label">Duration</div>
+      <div class="pill-value">{{ workoutsession.duration_minutes }} min</div>
+    </div>
+  </div>
+
+  <!-- Participants -->
+  <div class="participants-card">
+    <div class="participants-header">
+      <div class="participants-title">Participants</div>
+      <span class="participants-count">{{ workoutsession.clients.count }}</span>
+    </div>
+
+    {% if workoutsession.clients.all %}
+      {% for client in workoutsession.clients.all %}
+      <div class="participant-row">
+        <div class="participant-dot"></div>
+        <a href="{% url 'fitness:clients-detail' pk=client.pk %}" class="participant-link">
+          {{ client }}
+        </a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-text">No participants yet.</div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

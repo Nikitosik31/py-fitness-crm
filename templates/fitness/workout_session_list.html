@@ -1,0 +1,315 @@
+{% extends "layouts/base-presentation.html" %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .page-header-left .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      margin-bottom: 6px;
+    }
+
+    .page-header-left h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .btn-create {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      background: var(--accent-blue);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-create:hover { opacity: 0.88; transform: translateY(-1px); color: #fff; }
+
+    /* Table */
+    .crm-table-wrap {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow-x: auto;
+    }
+
+    .crm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .crm-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .crm-table th {
+      padding: 12px 18px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .crm-table tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .crm-table tbody tr:last-child { border-bottom: none; }
+    .crm-table tbody tr { cursor: pointer; }
+    .crm-table tbody tr:hover { background: rgba(255,255,255,0.04); }
+
+    .crm-table td {
+      padding: 13px 18px;
+      vertical-align: middle;
+    }
+
+    /* ID link */
+    .td-id-link {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .td-id-link:hover { color: var(--accent-blue); }
+
+    /* Session cell (program + date, no link) */
+    .td-session {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .td-session-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .td-session-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* Program link */
+    .td-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .td-link:hover { color: var(--accent-blue); }
+
+    /* Trainer link */
+    .td-trainer {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .td-trainer:hover { color: var(--text-primary); }
+
+    .td-cap {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .status-done {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(6,214,160,0.1);
+      border: 1px solid rgba(6,214,160,0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-green);
+      white-space: nowrap;
+    }
+
+    .status-done::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+
+    .status-plan {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: rgba(67,97,238,0.1);
+      border: 1px solid rgba(67,97,238,0.2);
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent-blue);
+      white-space: nowrap;
+    }
+
+    .status-plan::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+    }
+
+    /* Date filter */
+    .date-filter { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .date-filter-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--text-secondary); white-space: nowrap; }
+    .date-wrap { display: flex; align-items: center; }
+    .date-input { height: 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0 12px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--text-primary); outline: none; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; min-width: 170px; }
+    .date-input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(67,97,238,0.12); }
+    .date-input::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+    .search-btn { height: 40px; padding: 0 16px; background: var(--accent-blue); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.15s; white-space: nowrap; }
+    .search-btn:hover { opacity: 0.88; }
+    .search-clear { height: 40px; padding: 0 14px; background: transparent; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary); font-family: 'Inter', sans-serif; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: color 0.15s, border-color 0.15s; }
+    .search-clear:hover { color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+    .date-results-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+    .date-results-label strong { color: var(--accent-blue); font-weight: 600; }
+
+    /* Empty */
+    .empty-state {
+      padding: 60px 24px;
+      text-align: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-state p { font-size: 14px; margin: 0; }
+  </style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="crm-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="eyebrow">Fitness CRM</div>
+      <h1>Workout Sessions</h1>
+    </div>
+    <a href="{% url 'fitness:workout-session-create' %}" class="btn-create">
+      + Create Session
+    </a>
+  </div>
+
+  <form method="get" action="" class="date-filter">
+    <span class="date-filter-label">Filter by date</span>
+    <div class="date-wrap">
+      <input type="date" name="workout_session" class="date-input" value="{{ request.GET.workout_session }}" autocomplete="off" lang="en">
+    </div>
+    <button type="submit" class="search-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Apply
+    </button>
+    {% if request.GET.workout_session %}
+      <a href="{% url 'fitness:workout-session-list' %}" class="search-clear">✕ Clear</a>
+    {% endif %}
+  </form>
+  {% if request.GET.workout_session %}
+    <div class="date-results-label">Sessions on <strong>{{ request.GET.workout_session }}</strong> — {{ workoutsession_list|length }} found</div>
+  {% endif %}
+
+  {% if workoutsession_list %}
+  <div class="crm-table-wrap">
+    <table class="crm-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Session</th>
+          <th>Date</th>
+          <th>Trainer</th>
+          <th>Capacity</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for session in workoutsession_list %}
+        <tr data-href="{% url 'fitness:workout-session-detail' pk=session.id %}">
+          <td>
+            <a href="{% url 'fitness:workout-session-detail' pk=session.id %}" class="td-id-link">#{{ session.id }}</a>
+          </td>
+          <td>
+            <a href="{% url 'fitness:workout-program-detail' pk=session.workout_program.id %}" class="td-link" onclick="event.stopPropagation()">{{ session.workout_program }}</a>
+          </td>
+          <td class="td-session-date">{{ session.date }}</td>
+          <td>
+            <a href="{% url 'fitness:trainers-detail' pk=session.trainer.id %}" class="td-trainer">
+              {{ session.trainer }}
+            </a>
+          </td>
+          <td class="td-cap">{{ session.clients.count }}/{{ session.max_participants }}</td>
+          <td>
+            {% if session.is_completed %}
+              <span class="status-done">Completed</span>
+            {% else %}
+              <span class="status-plan">Planned</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% include "includes/pagination.html" %}
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">📅</div>
+    <p>No workout sessions found.</p>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  document.querySelectorAll('.crm-table tbody tr[data-href]').forEach(row => {
+    row.addEventListener('click', e => {
+      if (!e.target.closest('a')) window.location.href = row.dataset.href;
+    });
+  });
+</script>
+{% endblock javascripts %}
