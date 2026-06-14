@@ -1,7 +1,8 @@
+{% load query_transform %}
 {% if is_paginated %}
 <div class="crm-pagination">
   {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}" class="crm-page-btn">
+    <a href="?{% query_transform request page=page_obj.previous_page_number %}" class="crm-page-btn">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </a>
   {% else %}
@@ -15,7 +16,7 @@
   </span>
 
   {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}" class="crm-page-btn">
+    <a href="?{% query_transform request page=page_obj.next_page_number %}" class="crm-page-btn">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
   {% else %}
