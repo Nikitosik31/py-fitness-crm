@@ -8,8 +8,7 @@ from fitness.models import Specialization
 class AdminSiteTest(TestCase):
     def setUp(self) -> None:
         self.trainer = get_user_model().objects.create_superuser(
-            username="admin",
-            password="testadmin"
+            username="admin", password="testadmin"
         )
         self.client.force_login(self.trainer)
         self.trainer = get_user_model().objects.create_user(
@@ -21,7 +20,6 @@ class AdminSiteTest(TestCase):
             name="Specialization",
         )
         self.trainer.specialization.add(specialization)
-
 
     def test_specialization_and_experience_years_list(self):
         """
@@ -36,7 +34,7 @@ class AdminSiteTest(TestCase):
 
     def test_specialization_and_experience_years_detail(self):
         """
-        Test that author's pseudonym is in list_display on trainer detail admin page
+        Test that specialization and experience_years are shown on trainer detail page.
         :return:
         """
         url = reverse("admin:fitness_trainer_change", args=[self.trainer.id])
@@ -44,5 +42,3 @@ class AdminSiteTest(TestCase):
 
         self.assertContains(res, self.trainer.experience_years)
         self.assertContains(res, self.trainer.specialization.first().name)
-
-        

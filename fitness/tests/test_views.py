@@ -12,6 +12,7 @@ INDEX_URL = reverse("fitness:index")
 PROGRAM_URL = reverse("fitness:workout-program-list")
 SESSION_URL = reverse("fitness:workout-session-list")
 
+
 class PublicTrainerTest(TestCase):
     def test_login_required(self):
         res = self.client.get(TRAINER_URL)
@@ -30,7 +31,9 @@ class PrivateTrainerTest(TestCase):
         response = self.client.get(TRAINER_URL)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            list(response.context["trainer_list"]), list(get_user_model().objects.all()))
+            list(response.context["trainer_list"]),
+            list(get_user_model().objects.all()),
+        )
         self.assertTemplateUsed(response, "fitness/trainer_list.html")
 
 
@@ -48,7 +51,7 @@ class PrivateClientTest(TestCase):
         )
         self.client.force_login(self.trainer)
 
-    def test_retrieve_trainer(self):
+    def test_retrieve_client(self):
         Client.objects.create(
             first_name="test_first",
             last_name="test_last",
@@ -59,8 +62,7 @@ class PrivateClientTest(TestCase):
         response = self.client.get(CLIENT_URL)
         self.assertEqual(response.status_code, 200)
         client = Client.objects.all()
-        self.assertEqual(
-            list(response.context["client_list"]), list(client))
+        self.assertEqual(list(response.context["client_list"]), list(client))
         self.assertTemplateUsed(response, "fitness/client_list.html")
 
 
@@ -84,7 +86,6 @@ class PrivateIndexTest(TestCase):
         self.assertTemplateUsed(response, "fitness/index.html")
 
 
-
 class PublicWorkoutProgramTest(TestCase):
     def test_login_required(self):
         res = self.client.get(PROGRAM_URL)
@@ -106,12 +107,13 @@ class PrivateWorkoutProgramTest(TestCase):
             workout_type=WorkoutType.objects.create(
                 name="test_workout_program",
             ),
-
         )
         response = self.client.get(PROGRAM_URL)
         self.assertEqual(response.status_code, 200)
         program = WorkoutProgram.objects.all()
-        self.assertEqual(list(response.context["workoutprogram_list"]), list(program))
+        self.assertEqual(
+            list(response.context["workoutprogram_list"]), list(program)
+        )
         self.assertTemplateUsed(response, "fitness/workout_program_list.html")
 
 
@@ -119,7 +121,6 @@ class PublicWorkoutSessionTest(TestCase):
     def test_login_required(self):
         res = self.client.get(SESSION_URL)
         self.assertNotEqual(res.status_code, 200)
-
 
 
 class PrivateWorkoutSessionTest(TestCase):
@@ -137,7 +138,7 @@ class PrivateWorkoutSessionTest(TestCase):
                 description="test_workout_session",
                 workout_type=WorkoutType.objects.create(
                     name="test_workout_session",
-                )
+                ),
             ),
             date=date.today(),
             duration_minutes=10,
@@ -148,8 +149,8 @@ class PrivateWorkoutSessionTest(TestCase):
 
         response = self.client.get(SESSION_URL)
         self.assertEqual(response.status_code, 200)
-        program = WorkoutSession.objects.all()
-        self.assertEqual(list(response.context["workoutsession_list"]), list(program))
+        session = WorkoutSession.objects.all()
+        self.assertEqual(
+            list(response.context["workoutsession_list"]), list(session)
+        )
         self.assertTemplateUsed(response, "fitness/workout_session_list.html")
-
-
