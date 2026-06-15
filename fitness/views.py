@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views import generic
 from django.shortcuts import render
 
@@ -40,11 +39,9 @@ def index(request):
 class TrainersListView(LoginRequiredMixin, generic.ListView):
     model = Trainer
     paginate_by = 5
-    queryset = Trainer.objects.prefetch_related("clients")
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(TrainersListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         trainer = self.request.GET.get("trainer", "")
         context["search_form"] = TrainerSearchForm(initial={"trainer": trainer})
         return context
@@ -140,7 +137,7 @@ class ExerciseListView(LoginRequiredMixin, generic.ListView):
     paginate_by = 5
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ExerciseListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         exercise = self.request.GET.get("exercise", "")
         context["search_form"] = ExerciseSearchForm(initial={"exercise": exercise})
         return context
@@ -178,7 +175,7 @@ class WorkoutProgramListView(LoginRequiredMixin, generic.ListView):
     template_name = "fitness/workout_program_list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(WorkoutProgramListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         program = self.request.GET.get("program", "")
         context["search_form"] = WorkoutProgramSearchForm(initial={"workout_program": program})
         return context
@@ -218,7 +215,7 @@ class WorkoutSessionListView(LoginRequiredMixin, generic.ListView):
     template_name = "fitness/workout_session_list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(WorkoutSessionListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         session = self.request.GET.get("session", "")
         context["search_form"] = WorkoutSessionSearchForm(initial={"workout_session": session})
         return context
