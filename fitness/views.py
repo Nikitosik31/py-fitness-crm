@@ -5,10 +5,26 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import render
 
-from fitness.forms import TrainerCreateForm, TrainerExperienceYearsForm, ClientCreateForm, WorkoutProgramCreateForm, \
-    ExerciseCreateForm, WorkoutSessionCreateForm, TrainerSearchForm, ClientSearchForm, ExerciseSearchForm, \
-    WorkoutProgramSearchForm, WorkoutSessionSearchForm
-from fitness.models import Trainer, Client, Exercise, WorkoutProgram, WorkoutSession, Specialization, WorkoutType
+from fitness.forms import (
+    TrainerCreateForm,
+    TrainerExperienceYearsForm,
+    ClientCreateForm,
+    WorkoutProgramCreateForm,
+    ExerciseCreateForm,
+    WorkoutSessionCreateForm,
+    TrainerSearchForm,
+    ClientSearchForm,
+    ExerciseSearchForm,
+    WorkoutProgramSearchForm,
+    WorkoutSessionSearchForm,
+)
+from fitness.models import (
+    Trainer,
+    Client,
+    Exercise,
+    WorkoutProgram,
+    WorkoutSession,
+)
 
 
 @login_required
@@ -30,10 +46,10 @@ def index(request):
         "num_program": num_program,
         "num_sessions": num_sessions,
         "num_clients": num_clients,
-        "num_visits": num_visits + 1
+        "num_visits": num_visits + 1,
     }
 
-    return render(request,"fitness/index.html", context=context)
+    return render(request, "fitness/index.html", context=context)
 
 
 class TrainersListView(LoginRequiredMixin, generic.ListView):
@@ -43,19 +59,22 @@ class TrainersListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         trainer = self.request.GET.get("trainer", "")
-        context["search_form"] = TrainerSearchForm(initial={"trainer": trainer})
+        context["search_form"] = TrainerSearchForm(
+            initial={"trainer": trainer}
+        )
         return context
 
     def get_queryset(self):
-        queryset = Trainer.objects.prefetch_related("clients")
+        queryset = Trainer.objects.prefetch_related("clients", "specialization")
         form = TrainerSearchForm(self.request.GET)
         if form.is_valid():
             trainer = form.cleaned_data["trainer"]
             return queryset.filter(
-                Q(first_name__icontains=trainer) |
-                Q(last_name__icontains=trainer)
+                Q(first_name__icontains=trainer)
+                | Q(last_name__icontains=trainer)
             )
         return queryset
+
 
 class TrainersCreateView(LoginRequiredMixin, generic.CreateView):
     model = Trainer
@@ -66,13 +85,16 @@ class TrainersDetailView(LoginRequiredMixin, generic.DetailView):
     model = Trainer
     queryset = Trainer.objects.all().prefetch_related("clients")
 
+
 class TrainersUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Trainer
     form_class = TrainerExperienceYearsForm
 
+
 class TrainersDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Trainer
     success_url = reverse_lazy("fitness:trainers-list")
+
 
 class ClientListView(LoginRequiredMixin, generic.ListView):
     model = Client
@@ -101,13 +123,16 @@ class ClientListView(LoginRequiredMixin, generic.ListView):
         if form.is_valid():
             client = form.cleaned_data["client"]
             return queryset.filter(
-                Q(first_name__icontains=client) |
-                Q(last_name__icontains=client)
+                Q(first_name__icontains=client)
+                | Q(last_name__icontains=client)
             )
         return queryset
+
+
 class ClientCreateView(LoginRequiredMixin, generic.CreateView):
     model = Client
     form_class = ClientCreateForm
+
 
 class ClientDetailView(LoginRequiredMixin, generic.DetailView):
     model = Client
@@ -124,13 +149,16 @@ class ClientDetailView(LoginRequiredMixin, generic.DetailView):
         ),
     )
 
+
 class ClientUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Client
     form_class = ClientCreateForm
 
+
 class ClientDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Client
     success_url = reverse_lazy("fitness:clients-list")
+
 
 class ExerciseListView(LoginRequiredMixin, generic.ListView):
     model = Exercise
@@ -139,7 +167,9 @@ class ExerciseListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         exercise = self.request.GET.get("exercise", "")
-        context["search_form"] = ExerciseSearchForm(initial={"exercise": exercise})
+        context["search_form"] = ExerciseSearchForm(
+            initial={"exercise": exercise}
+        )
         return context
 
     def get_queryset(self):
@@ -155,13 +185,16 @@ class ExerciseCreateView(LoginRequiredMixin, generic.CreateView):
     model = Exercise
     form_class = ExerciseCreateForm
 
+
 class ExerciseDetailView(LoginRequiredMixin, generic.DetailView):
     model = Exercise
     queryset = Exercise.objects.all()
 
+
 class ExerciseUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Exercise
     form_class = ExerciseCreateForm
+
 
 class ExerciseDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Exercise
@@ -171,17 +204,20 @@ class ExerciseDeleteView(LoginRequiredMixin, generic.DeleteView):
 class WorkoutProgramListView(LoginRequiredMixin, generic.ListView):
     model = WorkoutProgram
     paginate_by = 5
-    queryset = WorkoutProgram.objects.all().prefetch_related("exercises", "workout_sessions").select_related("workout_type")
     template_name = "fitness/workout_program_list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         program = self.request.GET.get("program", "")
-        context["search_form"] = WorkoutProgramSearchForm(initial={"workout_program": program})
+        context["search_form"] = WorkoutProgramSearchForm(
+            initial={"workout_program": program}
+        )
         return context
 
     def get_queryset(self):
-        queryset = WorkoutProgram.objects.prefetch_related("exercises", "workout_sessions")
+        queryset = WorkoutProgram.objects.select_related("workout_type").prefetch_related(
+            "exercises", "workout_sessions"
+        )
         form = WorkoutProgramSearchForm(self.request.GET)
         if form.is_valid():
             program = form.cleaned_data["workout_program"]
@@ -193,35 +229,47 @@ class WorkoutProgramCreateView(LoginRequiredMixin, generic.CreateView):
     model = WorkoutProgram
     form_class = WorkoutProgramCreateForm
     template_name = "fitness/workout_program_form.html"
+
+
 class WorkoutProgramDetailView(LoginRequiredMixin, generic.DetailView):
     model = WorkoutProgram
-    queryset = WorkoutProgram.objects.all().select_related("workout_type").prefetch_related("exercises")
+    queryset = (
+        WorkoutProgram.objects.all()
+        .select_related("workout_type")
+        .prefetch_related("exercises")
+    )
     template_name = "fitness/workout_program_detail.html"
+
 
 class WorkoutProgramUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = WorkoutProgram
     form_class = WorkoutProgramCreateForm
     template_name = "fitness/workout_program_form.html"
 
+
 class WorkoutProgramDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = WorkoutProgram
     success_url = reverse_lazy("fitness:workout-program-list")
     template_name = "fitness/workout_program_confirm_delete.html"
 
+
 class WorkoutSessionListView(LoginRequiredMixin, generic.ListView):
     model = WorkoutSession
     paginate_by = 5
-    queryset = WorkoutSession.objects.all().select_related("trainer", "workout_program").prefetch_related("clients")
     template_name = "fitness/workout_session_list.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         session = self.request.GET.get("session", "")
-        context["search_form"] = WorkoutSessionSearchForm(initial={"workout_session": session})
+        context["search_form"] = WorkoutSessionSearchForm(
+            initial={"workout_session": session}
+        )
         return context
 
     def get_queryset(self):
-        queryset = WorkoutSession.objects.select_related("trainer", "workout_program").prefetch_related("clients")
+        queryset = WorkoutSession.objects.select_related(
+            "trainer", "workout_program"
+        ).prefetch_related("clients")
         form = WorkoutSessionSearchForm(self.request.GET)
 
         if form.is_valid():
@@ -229,18 +277,21 @@ class WorkoutSessionListView(LoginRequiredMixin, generic.ListView):
             if session:
                 return queryset.filter(date=session)
         return queryset
+
+
 class WorkoutSessionCreateView(LoginRequiredMixin, generic.CreateView):
     model = WorkoutSession
     form_class = WorkoutSessionCreateForm
     template_name = "fitness/workout_session_form.html"
 
+
 class WorkoutSessionDetailView(LoginRequiredMixin, generic.DetailView):
     model = WorkoutSession
     queryset = WorkoutSession.objects.select_related(
-        "trainer",
-        "workout_program"
+        "trainer", "workout_program"
     ).prefetch_related("clients")
     template_name = "fitness/workout_session_detail.html"
+
 
 class WorkoutSessionUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = WorkoutSession
