@@ -20,34 +20,31 @@
     <div class="login-card">
 
       <div class="login-header">
-        <div class="eyebrow">Welcome back</div>
-        <h1>Sign in</h1>
-        {% if next %}
-          <p>Please login to see this page.</p>
-        {% else %}
-          <p>Enter your credentials to continue</p>
-        {% endif %}
+        <div class="eyebrow">Create account</div>
+        <h1>Register</h1>
+        <p>Fill in your details to get started</p>
       </div>
 
       {% if form.errors %}
       <div class="login-error">
         <span class="login-error-icon">⚠️</span>
-        Username or password didn't match. Please try again.
+        Please fix the errors below.
       </div>
       {% endif %}
 
-      <form method="post" action="{% url 'login' %}">
+      <form method="post" action="{% url 'fitness:register' %}">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="hidden" name="next" value="{{ next }}" />
 
         <div class="login-divider"></div>
 
-        <button type="submit" class="btn-login">Sign in →</button>
+        <button type="submit" class="btn-login">Create account →</button>
       </form>
+
       <div style="text-align: center; margin-top: 16px; font-size: 13px; color: #8892A4;">
-        Don't have an account? <a href="{% url 'fitness:register' %}" style="color: #4361EE;">Register</a>
+        Already have an account? <a href="{% url 'login' %}" style="color: #4361EE;">Sign in</a>
       </div>
+
     </div>
   </div>
 </div>

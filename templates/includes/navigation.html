@@ -7,7 +7,7 @@
       <span>Fitness<strong>CRM</strong></span>
     </a>
 
-    <!-- Nav links -->
+    <!-- Nav links (desktop) -->
     <nav class="crm-nav-links">
       <a href="{% url 'fitness:clients-list' %}" class="crm-nav-link">Clients</a>
       <a href="{% url 'fitness:trainers-list' %}" class="crm-nav-link">Trainers</a>
@@ -17,9 +17,8 @@
     </nav>
 
     <!-- Right -->
-    <!-- Right -->
     {% if user.is_authenticated %}
-      <form method="post" action="{% url 'logout' %}" style="margin-left: auto; flex-shrink: 0;">
+      <form method="post" action="{% url 'logout' %}" class="crm-nav-right">
         {% csrf_token %}
         <button type="submit" class="crm-nav-logout">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
@@ -33,7 +32,7 @@
         </button>
       </form>
     {% else %}
-      <a href="{% url 'login' %}" class="crm-nav-logout" style="margin-left: auto; flex-shrink: 0; text-decoration: none;">
+      <a href="{% url 'login' %}" class="crm-nav-logout crm-nav-right" style="text-decoration: none;">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round">
@@ -45,119 +44,60 @@
       </a>
     {% endif %}
 
+    <!-- Burger button (mobile only) -->
+    <button class="crm-burger" id="crm-burger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
   </div>
+
+  <!-- Mobile menu -->
+  <div class="crm-mobile-menu" id="crm-mobile-menu">
+    <a href="{% url 'fitness:clients-list' %}" class="crm-nav-link">Clients</a>
+    <a href="{% url 'fitness:trainers-list' %}" class="crm-nav-link">Trainers</a>
+    <a href="{% url 'fitness:workout-session-list' %}" class="crm-nav-link">Sessions</a>
+    <a href="{% url 'fitness:workout-program-list' %}" class="crm-nav-link">Programs</a>
+    <a href="{% url 'fitness:exercise-list' %}" class="crm-nav-link">Exercises</a>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="crm-nav-link crm-mobile-logout">Logout</button>
+      </form>
+    {% endif %}
+  </div>
+
 </nav>
 
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0F1117; font-family: 'Inter', sans-serif; color: #F0F2F5; }
 
-  body {
-    background: #0F1117;
-    font-family: 'Inter', sans-serif;
-    color: #F0F2F5;
-  }
-
-  .crm-navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(15, 17, 23, 0.9);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .crm-nav-inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  /* Brand */
-  .crm-nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: #F0F2F5;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 17px;
-    font-weight: 500;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
+  .crm-navbar { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .crm-nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 20px; }
+  .crm-nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #F0F2F5; font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
   .crm-nav-brand strong { color: #4361EE; }
+  .crm-nav-logo { width: 32px; height: 32px; background: linear-gradient(135deg, #4361EE, #7B5CFA); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+  .crm-nav-links { display: flex; align-items: center; gap: 4px; flex: 1; }
+  .crm-nav-link { padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #8892A4; text-decoration: none; transition: color 0.15s, background 0.15s; white-space: nowrap; }
+  .crm-nav-link:hover { color: #F0F2F5; background: rgba(255,255,255,0.06); }
+  .crm-nav-link.active { color: #F0F2F5; background: rgba(255,255,255,0.08); }
+  .crm-nav-logout { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #8892A4; background: none; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; font-family: 'Inter', sans-serif; transition: color 0.15s, border-color 0.15s, background 0.15s; }
+  .crm-nav-logout:hover { color: #F0F2F5; border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); }
+  .crm-nav-right { margin-left: auto; flex-shrink: 0; }
+  .crm-burger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-shrink: 0; }
+  .crm-burger span { display: block; width: 22px; height: 2px; background: #8892A4; border-radius: 2px; transition: all 0.25s; }
+  .crm-mobile-menu { display: none; flex-direction: column; padding: 12px 16px 16px; border-top: 1px solid rgba(255,255,255,0.06); gap: 4px; }
+  .crm-mobile-menu.open { display: flex; }
+  .crm-mobile-menu .crm-nav-link { padding: 10px 14px; font-size: 14px; }
+  .crm-mobile-logout { width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; color: #8892A4; font-weight: 500; }
 
-  .crm-nav-logo {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, #4361EE, #7B5CFA);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-  }
-
-  /* Nav links */
-  .crm-nav-links {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex: 1;
-  }
-
-  .crm-nav-link {
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #8892A4;
-    text-decoration: none;
-    transition: color 0.15s, background 0.15s;
-    white-space: nowrap;
-  }
-
-  .crm-nav-link:hover {
-    color: #F0F2F5;
-    background: rgba(255,255,255,0.06);
-  }
-
-  .crm-nav-link.active {
-    color: #F0F2F5;
-    background: rgba(255,255,255,0.08);
-  }
-
-  /* Logout button */
-  .crm-nav-logout {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #8892A4;
-    background: none;
-    border: 1px solid rgba(255,255,255,0.08);
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
-  }
-
-  .crm-nav-logout:hover {
-    color: #F0F2F5;
-    border-color: rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.04);
-  }
-
-  @media (max-width: 600px) {
-    .crm-search-kbd { display: none; }
-    .crm-search-input { padding-right: 12px; }
+  @media (max-width: 700px) {
+    .crm-nav-links { display: none; }
+    .crm-nav-right { display: none; }
+    .crm-burger { display: flex; }
     .crm-nav-brand span { display: none; }
   }
 </style>
@@ -168,5 +108,11 @@
     if (link.getAttribute('href') && path.startsWith(link.getAttribute('href'))) {
       link.classList.add('active');
     }
+  });
+
+  const burger = document.getElementById('crm-burger');
+  const mobileMenu = document.getElementById('crm-mobile-menu');
+  burger.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
   });
 </script>

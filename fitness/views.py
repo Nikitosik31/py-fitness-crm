@@ -4,6 +4,7 @@ from django.db.models import Count, Q
 from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import render
+from django.contrib.auth import login
 
 from fitness.forms import (
     TrainerCreateForm,
@@ -303,3 +304,14 @@ class WorkoutSessionDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = WorkoutSession
     success_url = reverse_lazy("fitness:workout-session-list")
     template_name = "fitness/workout_session_confirm_delete.html"
+
+class RegisterView(generic.CreateView):
+    model = Trainer
+    form_class = TrainerCreateForm
+    template_name = "registration/register.html"
+    success_url = reverse_lazy("fitness:index")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login(self.request, self.object)
+        return response

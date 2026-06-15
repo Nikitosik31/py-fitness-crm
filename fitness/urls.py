@@ -26,7 +26,7 @@ from .views import (
     WorkoutProgramDetailView,
     WorkoutProgramCreateView,
     WorkoutProgramUpdateView,
-    WorkoutProgramDeleteView,
+    WorkoutProgramDeleteView, RegisterView,
 )
 
 app_name = "fitness"
@@ -139,4 +139,6 @@ urlpatterns = [
         WorkoutProgramDeleteView.as_view(),
         name="workout-program-delete",
     ),
+    path("register/", RegisterView.as_view(), name="register"),
+
 ]
