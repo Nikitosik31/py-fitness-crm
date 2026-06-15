@@ -9,14 +9,6 @@ def validate_experience_years(experience_years):
             "The trainer must have more than 1 year of experience."
         )
 
-    if not isinstance(experience_years, int):
-        raise forms.ValidationError(
-            "The experience years must be a positive integer."
-        )
-
-
-
-
 class TrainerCreateForm(forms.ModelForm):
     class Meta:
         model = Trainer
