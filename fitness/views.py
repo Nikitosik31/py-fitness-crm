@@ -116,21 +116,18 @@ class ClientCreateView(LoginRequiredMixin, generic.CreateView):
 
 class ClientDetailView(LoginRequiredMixin, generic.DetailView):
     model = Client
-    queryset = Client.objects.all().prefetch_related("trainers")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        clients = self.object
-        context["completed_workouts"] = (
-            clients.workout_sessions.filter(is_completed=True).count()
-        )
-
-        context["upcoming_workouts"] = (
-            clients.workout_sessions.filter(is_completed=False).count()
-        )
-
-        return context
+    queryset = Client.objects.prefetch_related("trainers").annotate(
+        completed_workouts=Count(
+            "workout_sessions",
+            filter=Q(workout_sessions__is_completed=True),
+            distinct=True,
+        ),
+        upcoming_workouts=Count(
+            "workout_sessions",
+            filter=Q(workout_sessions__is_completed=False),
+            distinct=True,
+        ),
+    )
 
 class ClientUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Client
