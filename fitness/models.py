@@ -34,6 +34,9 @@ class Client(models.Model):
     class Meta:
         ordering = ["first_name", "last_name"]
 
+    def get_absolute_url(self):
+        return reverse("fitness:clients-detail", kwargs={"pk": self.pk})
+
 
 class Exercise(models.Model):
     name = models.CharField(max_length=255)
@@ -45,6 +48,9 @@ class Exercise(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("fitness:exercise-detail", kwargs={"pk": self.pk})
 
 
 class WorkoutSession(models.Model):
@@ -69,6 +75,9 @@ class WorkoutSession(models.Model):
     def __str__(self):
         return f"{self.workout_program.name} - {self.date}"
 
+    def get_absolute_url(self):
+        return reverse("fitness:workout-session-detail", kwargs={"pk": self.pk})
+
 class WorkoutProgram(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -85,6 +94,8 @@ class WorkoutProgram(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    def get_absolute_url(self):
+        return reverse("fitness:workout-program-detail", kwargs={"pk": self.pk})
 
 class Specialization(models.Model):
     name = models.CharField(max_length=100, unique=True)

@@ -63,7 +63,6 @@ class TrainersListView(LoginRequiredMixin, generic.ListView):
 class TrainersCreateView(LoginRequiredMixin, generic.CreateView):
     model = Trainer
     form_class = TrainerCreateForm
-    success_url = reverse_lazy("fitness:trainers-list")
 
 
 class TrainersDetailView(LoginRequiredMixin, generic.DetailView):
@@ -112,7 +111,6 @@ class ClientListView(LoginRequiredMixin, generic.ListView):
 class ClientCreateView(LoginRequiredMixin, generic.CreateView):
     model = Client
     form_class = ClientCreateForm
-    success_url = reverse_lazy("fitness:clients-list")
 
 class ClientDetailView(LoginRequiredMixin, generic.DetailView):
     model = Client
@@ -132,7 +130,6 @@ class ClientDetailView(LoginRequiredMixin, generic.DetailView):
 class ClientUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Client
     form_class = ClientCreateForm
-    success_url = reverse_lazy("fitness:clients-list")
 
 class ClientDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Client
@@ -160,7 +157,6 @@ class ExerciseListView(LoginRequiredMixin, generic.ListView):
 class ExerciseCreateView(LoginRequiredMixin, generic.CreateView):
     model = Exercise
     form_class = ExerciseCreateForm
-    success_url = reverse_lazy("fitness:exercise-list")
 
 class ExerciseDetailView(LoginRequiredMixin, generic.DetailView):
     model = Exercise
@@ -169,7 +165,6 @@ class ExerciseDetailView(LoginRequiredMixin, generic.DetailView):
 class ExerciseUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Exercise
     form_class = ExerciseCreateForm
-    success_url = reverse_lazy("fitness:exercise-list")
 
 class ExerciseDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Exercise
@@ -200,7 +195,6 @@ class WorkoutProgramListView(LoginRequiredMixin, generic.ListView):
 class WorkoutProgramCreateView(LoginRequiredMixin, generic.CreateView):
     model = WorkoutProgram
     form_class = WorkoutProgramCreateForm
-    success_url = reverse_lazy("fitness:workout-program-list")
     template_name = "fitness/workout_program_form.html"
 class WorkoutProgramDetailView(LoginRequiredMixin, generic.DetailView):
     model = WorkoutProgram
@@ -210,7 +204,6 @@ class WorkoutProgramDetailView(LoginRequiredMixin, generic.DetailView):
 class WorkoutProgramUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = WorkoutProgram
     form_class = WorkoutProgramCreateForm
-    success_url = reverse_lazy("fitness:workout-program-list")
     template_name = "fitness/workout_program_form.html"
 
 class WorkoutProgramDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -242,7 +235,6 @@ class WorkoutSessionListView(LoginRequiredMixin, generic.ListView):
 class WorkoutSessionCreateView(LoginRequiredMixin, generic.CreateView):
     model = WorkoutSession
     form_class = WorkoutSessionCreateForm
-    success_url = reverse_lazy("fitness:workout-session-list")
     template_name = "fitness/workout_session_form.html"
 
 class WorkoutSessionDetailView(LoginRequiredMixin, generic.DetailView):
@@ -256,7 +248,6 @@ class WorkoutSessionDetailView(LoginRequiredMixin, generic.DetailView):
 class WorkoutSessionUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = WorkoutSession
     form_class = WorkoutSessionCreateForm
-    success_url = reverse_lazy("fitness:workout-session-list")
     template_name = "fitness/workout_session_form.html"
 
 
@@ -264,44 +255,3 @@ class WorkoutSessionDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = WorkoutSession
     success_url = reverse_lazy("fitness:workout-session-list")
     template_name = "fitness/workout_session_confirm_delete.html"
-
-
-class SpecializationListView(generic.ListView):
-    model = Specialization
-
-
-class SpecializationCreateView(generic.CreateView):
-    model = Specialization
-    fields = "__all__"
-    success_url = reverse_lazy("fitness:specialization-list")
-
-class SpecializationUpdateView(generic.UpdateView):
-    model = Specialization
-    fields = "__all__"
-    success_url = reverse_lazy("fitness:specialization-list")
-
-class SpecializationDeleteView(generic.DeleteView):
-    model = Specialization
-    success_url = reverse_lazy("fitness:specialization-list")
-
-
-class WorkoutTypeListView(generic.ListView):
-    model = WorkoutType
-
-class WorkoutTypeCreateView(generic.CreateView):
-    model = WorkoutType
-    fields = "__all__"
-    success_url = reverse_lazy("fitness:workout-type-list")
-
-class WorkoutTypeUpdateView(generic.UpdateView):
-    model = WorkoutType
-    fields = "__all__"
-    success_url = reverse_lazy("fitness:workout-type-list")
-
-class WorkoutTypeDetailView(generic.DetailView):
-    model = WorkoutType
-
-class WorkoutTypeDeleteView(generic.DeleteView):
-    model = WorkoutType
-    success_url = reverse_lazy("fitness:workout-type-list")
-
