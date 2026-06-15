@@ -56,6 +56,7 @@
           <span class="meta-dot"></span>
           <span class="goal-tag">{{ client.goal }}</span>
           <span class="meta-dot"></span>
+          Trainers:
           {% for trainer in client.trainers.all %}
             <span class="trainer-tag">{{ trainer.username }}{% if not forloop.last %}, {% endif %}</span>
           {% empty %}

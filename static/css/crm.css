@@ -1006,6 +1006,80 @@ body {
   .client-fullname { font-size: 28px; }
 }
 
+/* ===== TRAINER MOBILE CARDS ===== */
+.trainer-mobile-list { display: none; flex-direction: column; gap: 10px; }
+
+.trainer-mobile-card {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.trainer-mobile-card:hover { background: var(--bg-card-hover); }
+
+.trainer-mobile-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.trainer-mobile-id { font-size: 12px; color: var(--text-secondary); }
+
+.trainer-mobile-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.trainer-mobile-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.trainer-mobile-specs { display: flex; flex-wrap: wrap; gap: 6px; }
+
+@media (max-width: 700px) {
+  .crm-table-wrap .crm-table { display: none; }
+  .trainer-mobile-list { display: flex; }
+}
+
+/* ===== SESSION MOBILE CARDS ===== */
+.session-mobile-list { display: none; flex-direction: column; gap: 10px; }
+
+.session-mobile-card {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.session-mobile-card:hover { background: var(--bg-card-hover); }
+
+.session-mobile-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 700px) {
+  .session-mobile-list { display: flex; }
+  .crm-table-wrap .crm-table { display: none; }
+}
+
 /* ===== NAVBAR ===== */
 .crm-navbar {
   position: sticky;

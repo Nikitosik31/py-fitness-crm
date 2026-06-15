@@ -77,9 +77,7 @@
           <td>{{ trainer.clients.count }}</td>
           <td>
             {% for specialization in trainer.specialization.all %}
-              <span class="spec-tag">
-                {{ specialization.name }}
-              </span>
+              <span class="spec-tag">{{ specialization.name }}</span>
             {% empty %}
               <span class="muted">No specialization</span>
             {% endfor %}
@@ -92,6 +90,33 @@
         {% endfor %}
       </tbody>
     </table>
+
+    <!-- Mobile cards -->
+    <div class="trainer-mobile-list">
+      {% for trainer in trainer_list %}
+      <a href="{{ trainer.get_absolute_url }}" class="trainer-mobile-card">
+        <div class="trainer-mobile-top">
+          <span class="trainer-mobile-id">#{{ trainer.id }}</span>
+          <span class="spec-tag">{{ trainer.username }}</span>
+          {% if user == trainer %}<span class="me-badge">Me</span>{% endif %}
+        </div>
+        <div class="trainer-mobile-name">{{ trainer.first_name }} {{ trainer.last_name }}</div>
+        <div class="trainer-mobile-meta">
+          <span>Clients: {{ trainer.clients.count }}</span>
+          <span>Experience: {{ trainer.experience_years }} yr{{ trainer.experience_years|pluralize }}</span>
+        </div>
+        <div class="trainer-mobile-specs">
+          <span style="font-size: 12px; color: var(--text-secondary); margin-right: 4px;">Specialization:</span>
+          {% for specialization in trainer.specialization.all %}
+            <span class="spec-tag">{{ specialization.name }}</span>
+          {% empty %}
+            <span class="muted">No specialization</span>
+          {% endfor %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
     {% else %}
     <div class="empty-state">
       <div class="empty-icon">🏋️</div>

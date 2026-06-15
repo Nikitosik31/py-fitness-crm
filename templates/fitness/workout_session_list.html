@@ -78,6 +78,28 @@
     </table>
   </div>
 
+  <!-- Mobile cards -->
+  <div class="session-mobile-list">
+    {% for session in workoutsession_list %}
+    <a href="{% url 'fitness:workout-session-detail' pk=session.id %}" class="session-mobile-card">
+      <div class="session-mobile-top">
+        <span class="trainer-mobile-id">#{{ session.id }}</span>
+        {% if session.is_completed %}
+          <span class="status-done">Completed</span>
+        {% else %}
+          <span class="status-plan">Planned</span>
+        {% endif %}
+      </div>
+      <div class="trainer-mobile-name">{{ session.workout_program }}</div>
+      <div class="trainer-mobile-meta">
+        <span>📅 {{ session.date }}</span>
+        <span>👥 {{ session.clients.count }}/{{ session.max_participants }}</span>
+      </div>
+      <div style="font-size: 12px; color: var(--text-secondary);">🏋️ {{ session.trainer }}</div>
+    </a>
+    {% endfor %}
+  </div>
+
   {% include "includes/pagination.html" %}
 
   {% else %}
