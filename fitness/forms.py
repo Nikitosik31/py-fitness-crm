@@ -1,6 +1,12 @@
 from django import forms
 
-from fitness.models import Trainer, Client, WorkoutProgram, Exercise, WorkoutSession
+from fitness.models import (
+    Trainer,
+    Client,
+    WorkoutProgram,
+    Exercise,
+    WorkoutSession,
+)
 
 
 def validate_experience_years(experience_years):
@@ -8,6 +14,7 @@ def validate_experience_years(experience_years):
         raise forms.ValidationError(
             "The trainer must have more than 1 year of experience."
         )
+
 
 class TrainerCreateForm(forms.ModelForm):
     class Meta:
@@ -17,7 +24,7 @@ class TrainerCreateForm(forms.ModelForm):
             "email",
             "first_name",
             "last_name",
-        ) + ("experience_years", )
+        ) + ("experience_years",)
 
     def clean_experience_years(self):
         experience_years = self.cleaned_data["experience_years"]
@@ -44,6 +51,7 @@ class ClientCreateForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = "__all__"
+
 
 class WorkoutProgramCreateForm(forms.ModelForm):
     exercises = forms.ModelMultipleChoiceField(
@@ -80,8 +88,9 @@ class TrainerSearchForm(forms.Form):
             attrs={
                 "placeholder": "Search trainer ",
             }
-        )
+        ),
     )
+
 
 class ClientSearchForm(forms.Form):
     client = forms.CharField(
@@ -92,8 +101,9 @@ class ClientSearchForm(forms.Form):
             attrs={
                 "placeholder": "Search client ",
             }
-        )
+        ),
     )
+
 
 class ExerciseSearchForm(forms.Form):
     exercise = forms.CharField(
@@ -104,8 +114,9 @@ class ExerciseSearchForm(forms.Form):
             attrs={
                 "placeholder": "Search exercise",
             }
-        )
+        ),
     )
+
 
 class WorkoutProgramSearchForm(forms.Form):
     workout_program = forms.CharField(
@@ -116,12 +127,13 @@ class WorkoutProgramSearchForm(forms.Form):
             attrs={
                 "placeholder": "Search workout program",
             }
-        )
+        ),
     )
+
 
 class WorkoutSessionSearchForm(forms.Form):
     workout_session = forms.DateField(
         required=False,
         label="",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=forms.DateInput(attrs={"type": "date"}),
     )

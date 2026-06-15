@@ -14,7 +14,10 @@ from .models import (
 
 @admin.register(Trainer)
 class TrainerAdmin(UserAdmin):
-    list_display = UserAdmin.list_display + ("get_specialization", "experience_years", )
+    list_display = UserAdmin.list_display + (
+        "get_specialization",
+        "experience_years",
+    )
     filter_horizontal = ("specialization",)
     fieldsets = UserAdmin.fieldsets + (
         (
@@ -41,45 +44,45 @@ class TrainerAdmin(UserAdmin):
         ),
     )
 
-
     def get_specialization(self, obj):
         return ", ".join(
-            specialization.name
-            for specialization in obj.specialization.all()
+            specialization.name for specialization in obj.specialization.all()
         )
+
     get_specialization.short_description = "Specializations"
 
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("specialization")
 
+
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = (
+    list_display = ("first_name", "last_name", "age", "weight", "get_trainers")
+    search_fields = (
         "first_name",
         "last_name",
-        "age",
-        "weight",
-        "get_trainers"
     )
-    search_fields = ("first_name", "last_name",)
     list_filter = ("trainers",)
     filter_horizontal = ("trainers",)
 
     def get_trainers(self, obj):
-        return ", ".join(
-            trainer.username
-            for trainer in obj.trainers.all()
-        )
+        return ", ".join(trainer.username for trainer in obj.trainers.all())
+
     get_trainers.short_description = "Trainers"
 
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("trainers")
 
+
 @admin.register(Exercise)
 class ExerciseAdmin(admin.ModelAdmin):
-    list_display = ("name", "muscle_group",)
+    list_display = (
+        "name",
+        "muscle_group",
+    )
     search_fields = ("name",)
     list_filter = ("muscle_group",)
+
 
 @admin.register(WorkoutProgram)
 class WorkoutProgramAdmin(admin.ModelAdmin):
@@ -98,11 +101,7 @@ class WorkoutSessionAdmin(admin.ModelAdmin):
         "duration_minutes",
         "is_completed",
     )
-    list_filter = (
-        "date",
-        "trainer",
-        "is_completed"
-    )
+    list_filter = ("date", "trainer", "is_completed")
     search_fields = (
         "clients__first_name",
         "clients__last_name",
@@ -116,14 +115,17 @@ class WorkoutSessionAdmin(admin.ModelAdmin):
             f"{client.first_name} {client.last_name}"
             for client in obj.clients.all()
         )
+
     get_clients.short_description = "Clients"
 
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("clients")
-    
+
+
 @admin.register(WorkoutType)
 class WorkoutTypeAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
+
 
 admin.site.register(Specialization)

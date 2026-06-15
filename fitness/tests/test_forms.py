@@ -7,7 +7,9 @@ from fitness.models import Specialization
 
 
 class FormsTests(TestCase):
-    def test_trainer_creation_form_with_specialization_experience_first_last_name_is_valid(self):
+    def test_trainer_creation_form_with_specialization_experience_first_last_name_is_valid(
+        self,
+    ):
         specialization = Specialization.objects.create(
             name="test specialization",
         )
@@ -26,7 +28,6 @@ class FormsTests(TestCase):
         self.assertEqual(form.cleaned_data["experience_years"], 2)
         self.assertEqual(form.cleaned_data["first_name"], "new user")
         self.assertEqual(form.cleaned_data["last_name"], "user")
-
 
 
 class PrivateTrainerTests(TestCase):
@@ -51,7 +52,9 @@ class PrivateTrainerTests(TestCase):
 
         self.assertEqual(new_user.first_name, form_data["first_name"])
         self.assertEqual(new_user.last_name, form_data["last_name"])
-        self.assertEqual(new_user.experience_years, form_data["experience_years"])
+        self.assertEqual(
+            new_user.experience_years, form_data["experience_years"]
+        )
 
     def test_experience_years_form_invalid(self):
         form = TrainerExperienceYearsForm(data={"experience_years": 1})

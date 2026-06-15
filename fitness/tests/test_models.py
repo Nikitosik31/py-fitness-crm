@@ -3,7 +3,13 @@ from datetime import date
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from fitness.models import Client, WorkoutProgram, Exercise, WorkoutSession, WorkoutType
+from fitness.models import (
+    Client,
+    WorkoutProgram,
+    Exercise,
+    WorkoutSession,
+    WorkoutType,
+)
 
 
 class ModelTest(TestCase):
@@ -21,7 +27,6 @@ class ModelTest(TestCase):
             age=22,
             weight=80,
             goal="test_goal",
-
         )
 
         self.exercise = Exercise.objects.create(
@@ -30,7 +35,6 @@ class ModelTest(TestCase):
             description="test_exercise",
         )
 
-
         self.test_workout_program = WorkoutProgram.objects.create(
             name="test_workout_program",
             description="test_workout_program",
@@ -38,17 +42,26 @@ class ModelTest(TestCase):
                 name="test_workout_type",
             ),
         )
+
     def test_trainer(self):
 
-        self.assertEqual(str(self.trainer), f"{self.trainer.username} ({self.trainer.first_name} {self.trainer.last_name})")
+        self.assertEqual(
+            str(self.trainer),
+            f"{self.trainer.username} ({self.trainer.first_name} {self.trainer.last_name})",
+        )
 
     def test_client(self):
         self.test_client.trainers.add(self.trainer)
-        self.assertEqual(str(self.test_client), f"{self.test_client.first_name} {self.test_client.last_name}")
+        self.assertEqual(
+            str(self.test_client),
+            f"{self.test_client.first_name} {self.test_client.last_name}",
+        )
 
     def test_workout_program(self):
         self.test_workout_program.exercises.add(self.exercise)
-        self.assertEqual(str(self.test_workout_program), f"{self.test_workout_program.name}")
+        self.assertEqual(
+            str(self.test_workout_program), f"{self.test_workout_program.name}"
+        )
 
     def test_workout_session(self):
         test_workout_session = WorkoutSession.objects.create(
@@ -57,12 +70,13 @@ class ModelTest(TestCase):
             duration_minutes=10,
             trainer=self.trainer,
             is_completed=False,
-            max_participants=10
+            max_participants=10,
         )
         test_workout_session.clients.add(self.test_client)
-        self.assertEqual(str(test_workout_session), f"{test_workout_session.workout_program.name} - {test_workout_session.date}")
+        self.assertEqual(
+            str(test_workout_session),
+            f"{test_workout_session.workout_program.name} - {test_workout_session.date}",
+        )
 
     def test_exercise(self):
         self.assertEqual(str(self.exercise), f"{self.exercise.name}")
-
-
