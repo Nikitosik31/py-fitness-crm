@@ -81,29 +81,26 @@ class TrainersDeleteView(LoginRequiredMixin, generic.DeleteView):
 class ClientListView(LoginRequiredMixin, generic.ListView):
     model = Client
     paginate_by = 5
-    queryset = Client.objects.prefetch_related(
-        "trainers"
-    ).annotate(
-        completed_workouts=Count(
-            "workout_sessions",
-            filter=Q(workout_sessions__is_completed=True),
-            distinct=True,
-        ),
-        upcoming_workouts=Count(
-            "workout_sessions",
-            filter=Q(workout_sessions__is_completed=False),
-            distinct=True,
-        ),
-    )
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ClientListView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         client = self.request.GET.get("client", "")
         context["search_form"] = ClientSearchForm(initial={"client": client})
         return context
 
     def get_queryset(self):
-        queryset = Client.objects.prefetch_related("trainers")
+        queryset = Client.objects.prefetch_related("trainers").annotate(
+            completed_workouts=Count(
+                "workout_sessions",
+                filter=Q(workout_sessions__is_completed=True),
+                distinct=True,
+            ),
+            upcoming_workouts=Count(
+                "workout_sessions",
+                filter=Q(workout_sessions__is_completed=False),
+                distinct=True,
+            ),
+        )
         form = ClientSearchForm(self.request.GET)
         if form.is_valid():
             client = form.cleaned_data["client"]

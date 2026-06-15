@@ -26,11 +26,11 @@ from .views import (
     WorkoutProgramDetailView,
     WorkoutProgramCreateView,
     WorkoutProgramUpdateView,
-    WorkoutProgramDeleteView, SpecializationListView, WorkoutTypeListView, WorkoutTypeCreateView, WorkoutTypeDetailView,
-    WorkoutTypeUpdateView, WorkoutTypeDeleteView, SpecializationCreateView, SpecializationUpdateView,
-    SpecializationDeleteView,
+    WorkoutProgramDeleteView,
 )
 
+
+app_name = "fitness"
 urlpatterns = [
     path("", index, name="index"),
     path("trainers/", TrainersListView.as_view(), name="trainers-list"),
@@ -58,52 +58,5 @@ urlpatterns = [
     path("program/create/", WorkoutProgramCreateView.as_view(), name="workout-program-create"),
     path("program/<int:pk>/update/", WorkoutProgramUpdateView.as_view(), name="workout-program-update"),
     path("program/<int:pk>/delete-program/", WorkoutProgramDeleteView.as_view(), name="workout-program-delete"),
-    path(
-    "specializations/",
-    SpecializationListView.as_view(),
-    name="specialization-list",
-    ),
-    path(
-        "specializations/create/",
-        SpecializationCreateView.as_view(),
-        name="specialization-create",
-    ),
-    path(
-        "specializations/<int:pk>/update/",
-        SpecializationUpdateView.as_view(),
-        name="specialization-update",
-    ),
-    path(
-        "specializations/<int:pk>/delete/",
-        SpecializationDeleteView.as_view(),
-        name="specialization-delete",
-    ),
-    path(
-        "workout-types/",
-        WorkoutTypeListView.as_view(),
-        name="workout-type-list",
-    ),
-    path(
-        "workout-types/create/",
-        WorkoutTypeCreateView.as_view(),
-        name="workout-type-create",
-    ),
-    path(
-        "workout-types/<int:pk>/",
-        WorkoutTypeDetailView.as_view(),
-        name="workout-type-detail",
-    ),
-    path(
-        "workout-types/<int:pk>/update/",
-        WorkoutTypeUpdateView.as_view(),
-        name="workout-type-update",
-    ),
-    path(
-        "workout-types/<int:pk>/delete/",
-        WorkoutTypeDeleteView.as_view(),
-        name="workout-type-delete",
-    ),
+
 ]
-
-
-app_name = "fitness"
