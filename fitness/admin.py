@@ -49,6 +49,8 @@ class TrainerAdmin(UserAdmin):
         )
     get_specialization.short_description = "Specializations"
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("specialization")
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
@@ -69,6 +71,9 @@ class ClientAdmin(admin.ModelAdmin):
             for trainer in obj.trainers.all()
         )
     get_trainers.short_description = "Trainers"
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("trainers")
 
 @admin.register(Exercise)
 class ExerciseAdmin(admin.ModelAdmin):
@@ -113,6 +118,9 @@ class WorkoutSessionAdmin(admin.ModelAdmin):
         )
     get_clients.short_description = "Clients"
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("clients")
+    
 @admin.register(WorkoutType)
 class WorkoutTypeAdmin(admin.ModelAdmin):
     list_display = ("name",)
