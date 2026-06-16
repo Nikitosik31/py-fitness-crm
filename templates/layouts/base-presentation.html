@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="icon" type="image/png" href="{{ ASSETS_ROOT }}/img/favicon.png">
+  <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
 
   <title>FitnessCRM — {% block title %}Dashboard{% endblock %}</title>
 
@@ -64,10 +65,6 @@
   </main>
 
   {% include "includes/footer.html" %}
-
-  <!-- Bootstrap JS (keeping for compatibility) -->
-  <script src="{{ ASSETS_ROOT }}/js/core/popper.min.js"></script>
-  <script src="{{ ASSETS_ROOT }}/js/core/bootstrap.min.js"></script>
 
   {% block javascripts %}{% endblock javascripts %}
 
