@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 
 from fitness.models import (
     Trainer,
@@ -16,9 +18,9 @@ def validate_experience_years(experience_years):
         )
 
 
-class TrainerCreateForm(forms.ModelForm):
+class TrainerCreateForm(UserCreationForm):
     class Meta:
-        model = Trainer
+        model = get_user_model()
         fields = (
             "username",
             "email",
