@@ -44,3 +44,5 @@ staticfiles/
 
 # Claude Code
 .claude/
+dump.json # чтобы дамп не попал в git
+dump.json
