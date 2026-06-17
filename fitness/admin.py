@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import (
+from fitness.models import (
     Trainer,
     Client,
     Exercise,
