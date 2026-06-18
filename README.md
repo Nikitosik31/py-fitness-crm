@@ -3,6 +3,15 @@
 A Django-based CRM system for managing a fitness studio: trainers, clients,
 exercises, workout programs and training sessions.
 
+## Live Demo
+
+The project is deployed on Render: https://py-fitness-crm.onrender.com
+
+Test user credentials:
+
+- login: `Luka`
+- password: `Nba2k26!`
+
 ## Problem this project solves
 
 Fitness centers often manage trainers, clients and workout schedules through
