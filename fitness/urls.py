@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import TemplateView
 
 from fitness.views import (
@@ -27,7 +27,11 @@ from fitness.views import (
     WorkoutProgramDetailView,
     WorkoutProgramCreateView,
     WorkoutProgramUpdateView,
-    WorkoutProgramDeleteView, RegisterView, client_create_view, redirect_after_login, ClientProfileView,
+    WorkoutProgramDeleteView,
+    RegisterView,
+    client_create_view,
+    redirect_after_login,
+    ClientProfileView,
     ProgressReportCreateView,
 )
 
@@ -143,8 +147,19 @@ urlpatterns = [
     ),
     path("register/", RegisterView.as_view(), name="register"),
     path("register/client/", client_create_view, name="client-register"),
-    path("register/choose/", TemplateView.as_view(template_name="registration/choose_role.html"), name="register-choose"),
+    path(
+        "register/choose/",
+        TemplateView.as_view(template_name="registration/choose_role.html"),
+        name="register-choose",
+    ),
     path("redirect/", redirect_after_login, name="redirect-after-login"),
-    path("client_profile/", ClientProfileView.as_view(), name="client-profile"),
-    path("client/add-report/", ProgressReportCreateView.as_view(), name="add-report"),
+    path(
+        "client_profile/", ClientProfileView.as_view(), name="client-profile"
+    ),
+    path(
+        "client/add-report/",
+        ProgressReportCreateView.as_view(),
+        name="add-report",
+    ),
+    path("i18n/", include("django.conf.urls.i18n")),
 ]

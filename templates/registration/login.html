@@ -1,6 +1,7 @@
 {% extends "layouts/base-presentation.html" %}
 {% load crispy_forms_filters %}
 {% load static %}
+{% load i18n %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static 'css/crm.css' %}">
@@ -20,19 +21,19 @@
     <div class="login-card">
 
       <div class="login-header">
-        <div class="eyebrow">Welcome back</div>
-        <h1>Sign in</h1>
+        <div class="eyebrow">{% trans "Welcome back" %}</div>
+        <h1>{% trans "Sign in" %}</h1>
         {% if next %}
-          <p>Please login to see this page.</p>
+          <p>{% trans "Please login to see this page." %}</p>
         {% else %}
-          <p>Enter your credentials to continue</p>
+          <p>{% trans "Enter your credentials to continue" %}</p>
         {% endif %}
       </div>
 
       {% if form.errors %}
       <div class="login-error">
         <span class="login-error-icon">⚠️</span>
-        Username or password didn't match. Please try again.
+        {% trans "Username or password didn't match. Please try again." %}
       </div>
       {% endif %}
 
@@ -43,10 +44,10 @@
 
         <div class="login-divider"></div>
 
-        <button type="submit" class="btn-login">Sign in →</button>
+        <button type="submit" class="btn-login">{% trans "Sign in" %} →</button>
       </form>
       <div style="text-align: center; margin-top: 16px; font-size: 13px; color: #8892A4;">
-        Don't have an account? <a href="{% url 'fitness:register-choose' %}" style="color: #4361EE;">Register</a>
+        {% trans "Don't have an account?" %} <a href="{% url 'fitness:register-choose' %}" style="color: #4361EE;">{% trans "Register" %}</a>
       </div>
     </div>
   </div>

@@ -31,8 +31,9 @@ class Client(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        null=True, blank=True,
-        related_name="client_profile"
+        null=True,
+        blank=True,
+        related_name="client_profile",
     )
 
     def __str__(self):
@@ -132,7 +133,9 @@ class WorkoutType(models.Model):
 
 
 class ProgressReport(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="reports")
+    client = models.ForeignKey(
+        Client, on_delete=models.CASCADE, related_name="reports"
+    )
     date = models.DateField(auto_now_add=True)
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     chest = models.DecimalField(max_digits=5, decimal_places=2)

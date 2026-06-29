@@ -1,6 +1,6 @@
 {% extends "layouts/base-presentation.html" %}
 {% load static %}
-
+{% load i18n %}
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static 'css/crm.css' %}">
   <style>
@@ -46,29 +46,29 @@
       <div class="cp-avatar">{{ object.first_name.0 }}{{ object.last_name.0 }}</div>
       <div>
         <p class="cp-name">{{ object.first_name }} {{ object.last_name }}</p>
-        <p class="cp-sub">Client</p>
+        <p class="cp-sub">{% trans "Athlete" %}</p>
       </div>
     </div>
     <a href="{% url 'fitness:add-report' %}" class="btn-green">
-      + Add Report
+      {% trans "+ Add Report" %}
     </a>
   </div>
 
   <div class="cp-stats-grid">
     <div class="cp-stat">
-      <p class="cp-stat-label">Age</p>
+      <p class="cp-stat-label">{% trans "Age" %}</p>
       <p class="cp-stat-value">{{ object.age }}</p>
     </div>
     <div class="cp-stat">
-      <p class="cp-stat-label">Weight</p>
+      <p class="cp-stat-label">{% trans "Weight" %}</p>
       <p class="cp-stat-value">{{ object.weight }} <span style="font-size: 13px; font-weight: 400; color: var(--text-secondary);">kg</span></p>
     </div>
     <div class="cp-stat">
-      <p class="cp-stat-label">Reports</p>
+      <p class="cp-stat-label">{% trans "Reports" %}</p>
       <p class="cp-stat-value">{{ object.reports.count }}</p>
     </div>
     <div class="cp-stat">
-      <p class="cp-stat-label">Goal</p>
+      <p class="cp-stat-label">{% trans "Goal" %}</p>
       <p class="cp-stat-value" style="font-size: 14px; padding-top: 4px;">{{ object.goal }}</p>
     </div>
   </div>
@@ -76,18 +76,18 @@
   {% if object.reports.exists %}
   <div class="cp-charts-grid">
     <div class="cp-card">
-      <p class="cp-section-title">Weight progress, kg</p>
+      <p class="cp-section-title">{% trans "Weight progress, kg" %}</p>
       <canvas id="weightChart" height="140"></canvas>
     </div>
     <div class="cp-card">
-      <p class="cp-section-title">Measurements, cm</p>
+      <p class="cp-section-title">{% trans "Measurements, cm" %}</p>
       <canvas id="measureChart" height="140"></canvas>
     </div>
   </div>
   {% endif %}
 
   <div class="cp-card">
-    <p class="cp-section-title">Report History</p>
+    <p class="cp-section-title">{% trans "Report History" %}</p>
     {% if object.reports.exists %}
     <div class="cp-report-list">
       {% for report in object.reports.all %}
@@ -95,23 +95,23 @@
         <p class="cp-report-date">{{ report.date }}</p>
         <div class="cp-report-grid">
           <div class="cp-report-field">
-            <span class="cp-report-field-label">Weight</span>
+            <span class="cp-report-field-label">{% trans "Weight" %}</span>
             <span class="cp-report-field-value accent">{{ report.weight }} kg</span>
           </div>
           <div class="cp-report-field">
-            <span class="cp-report-field-label">Chest</span>
+            <span class="cp-report-field-label">{% trans "Chest" %}</span>
             <span class="cp-report-field-value">{{ report.chest }} cm</span>
           </div>
           <div class="cp-report-field">
-            <span class="cp-report-field-label">Waist</span>
+            <span class="cp-report-field-label">{% trans "Waist" %}</span>
             <span class="cp-report-field-value">{{ report.waist }} cm</span>
           </div>
           <div class="cp-report-field">
-            <span class="cp-report-field-label">Hips</span>
+            <span class="cp-report-field-label">{% trans "Hips" %}</span>
             <span class="cp-report-field-value">{{ report.hips }} cm</span>
           </div>
           <div class="cp-report-field">
-            <span class="cp-report-field-label">Arm</span>
+            <span class="cp-report-field-label">{% trans "Arm" %}</span>
             <span class="cp-report-field-value">{{ report.arm }} cm</span>
           </div>
         </div>
@@ -123,7 +123,7 @@
     </div>
     {% else %}
     <div class="cp-empty">
-      No reports yet. Add your first one!
+      {% trans "No reports yet. Add your first one!" %}
     </div>
     {% endif %}
   </div>

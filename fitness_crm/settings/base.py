@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
+
 import os
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -20,15 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY= os.environ.get(
+SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
-    "django-insecure-$w9z42w3uq+&v21m-y4wsf*4r039%fq96dssdtnyt)gs+x(o6$"
+    "django-insecure-$w9z42w3uq+&v21m-y4wsf*4r039%fq96dssdtnyt)gs+x(o6$",
 )
 
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
-
 
 
 # Application definition
@@ -51,6 +51,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -146,3 +147,13 @@ INTERNAL_IPS = [
 AUTH_USER_MODEL = "fitness.Trainer"
 
 LOGIN_REDIRECT_URL = "/redirect/"
+
+LANGUAGES = [
+    ("en", _("English")),
+    ("uk", _("Ukrainian")),
+    ("ru", _("Russian")),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]

@@ -1,6 +1,7 @@
 {% extends "layouts/base-presentation.html" %}
 {% load crispy_forms_filters %}
 {% load static %}
+{% load i18n %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static 'css/crm.css' %}">
@@ -18,15 +19,15 @@
     <div class="login-card">
 
       <div class="login-header">
-        <div class="eyebrow">Progress</div>
-        <h1>New Report</h1>
-        <p>Fill in your measurements for this week</p>
+        <div class="eyebrow">{% trans "Progress" %}</div>
+        <h1>{% trans "New Report" %}</h1>
+        <p>{% trans "Fill in your measurements for this week" %}</p>
       </div>
 
       {% if form.errors %}
       <div class="login-error">
         <span class="login-error-icon">⚠️</span>
-        Please fix the errors below.
+        {% trans "Please fix the errors below." %}
       </div>
       {% endif %}
 
@@ -37,12 +38,12 @@
         <div class="login-divider"></div>
 
         <button type="submit" class="btn-login" style="background: #06D6A0; color: #0a2e28;">
-          Save Report →
+          {% trans "Save Report" %} →
         </button>
       </form>
 
       <div style="text-align: center; margin-top: 16px; font-size: 13px; color: #8892A4;">
-        <a href="{% url 'fitness:client-profile' %}" style="color: #4361EE;">← Back to Profile</a>
+        <a href="{% url 'fitness:client-profile' %}" style="color: #4361EE;">← {% trans "Back to Profile" %}</a>
       </div>
 
     </div>

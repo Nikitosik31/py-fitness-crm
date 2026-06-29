@@ -1,6 +1,7 @@
 {% extends "layouts/base-presentation.html" %}
 {% load crispy_forms_filters %}
 {% load static %}
+{% load i18n %}
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static 'css/crm.css' %}">
@@ -20,15 +21,15 @@
     <div class="login-card">
 
       <div class="login-header">
-        <div class="eyebrow">Create account</div>
-        <h1>Client Registration</h1>
-        <p>Fill in your details to get started</p>
+        <div class="eyebrow">{% trans "Create account" %}</div>
+        <h1>{% trans "Athlete Registration" %}</h1>
+        <p>{% trans "Fill in your details to get started" %}</p>
       </div>
 
       {% if form.errors %}
       <div class="login-error">
         <span class="login-error-icon">⚠️</span>
-        Please fix the errors below.
+        {% trans "Please fix the errors below." %}
       </div>
       {% endif %}
 
@@ -38,11 +39,11 @@
 
         <div class="login-divider"></div>
 
-        <button type="submit" class="btn-login">Create account →</button>
+        <button type="submit" class="btn-login">{% trans "Create account" %} →</button>
       </form>
 
       <div style="text-align: center; margin-top: 16px; font-size: 13px; color: #8892A4;">
-        Already have an account? <a href="{% url 'login' %}" style="color: #4361EE;">Sign in</a>
+        {% trans "Already have an account?" %} <a href="{% url 'login' %}" style="color: #4361EE;">{% trans "Sign in" %}</a>
       </div>
 
     </div>

@@ -20,6 +20,24 @@
       {% endif %}
     </nav>
 
+    <!-- Language switcher -->
+    {% load i18n %}
+    <div class="crm-lang-switcher">
+      <form method="post" action="{% url 'set_language' %}">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        <select name="language" onchange="this.form.submit()" class="crm-lang-select">
+          {% get_current_language as CURRENT_LANGUAGE %}
+          {% get_available_languages as LANGUAGES %}
+          {% for lang_code, lang_name in LANGUAGES %}
+            <option value="{{ lang_code }}" {% if lang_code == CURRENT_LANGUAGE %}selected{% endif %}>
+              {{ lang_name }}
+            </option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+
     <!-- Right -->
     {% if user.is_authenticated %}
       <form method="post" action="{% url 'logout' %}" class="crm-nav-right">
@@ -95,6 +113,10 @@
   .crm-nav-logout { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #8892A4; background: none; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; font-family: 'Inter', sans-serif; transition: color 0.15s, border-color 0.15s, background 0.15s; }
   .crm-nav-logout:hover { color: #F0F2F5; border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); }
   .crm-nav-right { margin-left: auto; flex-shrink: 0; }
+  .crm-lang-switcher { flex-shrink: 0; }
+  .crm-lang-select { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; color: #8892A4; font-size: 12px; font-family: 'Inter', sans-serif; padding: 6px 10px; cursor: pointer; outline: none; }
+  .crm-lang-select:hover { border-color: rgba(255,255,255,0.15); color: #F0F2F5; }
+  .crm-lang-select option { background: #16191F; color: #F0F2F5; }
   .crm-burger { display: none; flex-direction: column; justify-content: center; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; margin-left: auto; flex-shrink: 0; }
   .crm-burger span { display: block; width: 22px; height: 2px; background: #8892A4; border-radius: 2px; transition: all 0.25s; }
   .crm-mobile-menu { display: none; flex-direction: column; padding: 12px 16px 16px; border-top: 1px solid rgba(255,255,255,0.06); gap: 4px; }
