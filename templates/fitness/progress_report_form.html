@@ -10,44 +10,41 @@
 <div class="login-page">
   <div class="login-wrap">
 
-    <!-- Brand -->
     <a href="/" class="login-brand">
       <div class="login-brand-logo">💪</div>
       <span class="login-brand-name">Fitness<strong>CRM</strong></span>
     </a>
 
-    <!-- Card -->
     <div class="login-card">
 
       <div class="login-header">
-        <div class="eyebrow">Welcome back</div>
-        <h1>Sign in</h1>
-        {% if next %}
-          <p>Please login to see this page.</p>
-        {% else %}
-          <p>Enter your credentials to continue</p>
-        {% endif %}
+        <div class="eyebrow">Progress</div>
+        <h1>New Report</h1>
+        <p>Fill in your measurements for this week</p>
       </div>
 
       {% if form.errors %}
       <div class="login-error">
         <span class="login-error-icon">⚠️</span>
-        Username or password didn't match. Please try again.
+        Please fix the errors below.
       </div>
       {% endif %}
 
-      <form method="post" action="{% url 'login' %}">
+      <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="hidden" name="next" value="{{ next }}" />
 
         <div class="login-divider"></div>
 
-        <button type="submit" class="btn-login">Sign in →</button>
+        <button type="submit" class="btn-login" style="background: #06D6A0; color: #0a2e28;">
+          Save Report →
+        </button>
       </form>
+
       <div style="text-align: center; margin-top: 16px; font-size: 13px; color: #8892A4;">
-        Don't have an account? <a href="{% url 'fitness:register-choose' %}" style="color: #4361EE;">Register</a>
+        <a href="{% url 'fitness:client-profile' %}" style="color: #4361EE;">← Back to Profile</a>
       </div>
+
     </div>
   </div>
 </div>

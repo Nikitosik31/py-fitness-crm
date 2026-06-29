@@ -1,13 +1,14 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django.forms.widgets import Textarea
 
 from fitness.models import (
     Trainer,
     Client,
     WorkoutProgram,
     Exercise,
-    WorkoutSession,
+    WorkoutSession, ProgressReport,
 )
 
 
@@ -139,3 +140,41 @@ class WorkoutSessionSearchForm(forms.Form):
         label="",
         widget=forms.DateInput(attrs={"type": "date"}),
     )
+
+
+class ClientCreateForm(UserCreationForm):
+     age = forms.IntegerField()
+     weight = forms.DecimalField(max_digits=5, decimal_places=2)
+     goal = forms.CharField(max_length=255, widget=forms.Textarea(
+         attrs={"class": "form-control"}
+     ))
+
+     class Meta:
+         model = Trainer
+         fields = (
+             "username",
+             "email",
+             "first_name",
+             "last_name",
+         )
+
+
+class ProgressReportForm(forms.ModelForm):
+    class Meta:
+        model = ProgressReport
+        fields = (
+            "weight",
+            "chest",
+            "waist",
+            "hips",
+            "arm",
+            "notes",
+        )
+        labels = {
+            "weight": "Weight (kg)",
+            "chest": "Chest (cm)",
+            "waist": "Waist (cm)",
+            "hips": "Hips (cm)",
+            "arm": "Arm (cm)",
+            "notes": "Notes",
+        }

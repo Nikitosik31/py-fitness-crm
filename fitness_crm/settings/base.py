@@ -145,4 +145,4 @@ INTERNAL_IPS = [
 
 AUTH_USER_MODEL = "fitness.Trainer"
 
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "/redirect/"

@@ -1,0 +1,43 @@
+{% extends "layouts/base-presentation.html" %}
+{% load static %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="login-page">
+  <div class="login-wrap">
+
+    <!-- Brand -->
+    <a href="/" class="login-brand">
+      <div class="login-brand-logo">💪</div>
+      <span class="login-brand-name">Fitness<strong>CRM</strong></span>
+    </a>
+
+    <!-- Card -->
+    <div class="login-card">
+
+      <div class="login-header">
+        <div class="eyebrow">Create account</div>
+        <h1>Who are you?</h1>
+        <p>Choose your account type to get started</p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+        <a href="{% url 'fitness:register' %}" class="btn-login" style="text-align: center; text-decoration: none;">
+          🏋️ I'm a Trainer
+        </a>
+        <a href="{% url 'fitness:client-register' %}" class="btn-login" style="text-align: center; text-decoration: none; background: #06D6A0;">
+          🙋 I'm a Client
+        </a>
+      </div>
+
+      <div style="text-align: center; margin-top: 16px; font-size: 13px; color: #8892A4;">
+        Already have an account? <a href="{% url 'login' %}" style="color: #4361EE;">Sign in</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

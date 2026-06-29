@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
@@ -27,6 +28,12 @@ class Client(models.Model):
     weight = models.DecimalField(max_digits=5, decimal_places=2)
     goal = models.TextField()
     trainers = models.ManyToManyField(Trainer, related_name="clients")
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name="client_profile"
+    )
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -122,3 +129,20 @@ class WorkoutType(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ProgressReport(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="reports")
+    date = models.DateField(auto_now_add=True)
+    weight = models.DecimalField(max_digits=5, decimal_places=2)
+    chest = models.DecimalField(max_digits=5, decimal_places=2)
+    waist = models.DecimalField(max_digits=5, decimal_places=2)
+    hips = models.DecimalField(max_digits=5, decimal_places=2)
+    arm = models.DecimalField(max_digits=5, decimal_places=2)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-date"]
+
+    def __str__(self):
+        return f"{self.client} - {self.date}"

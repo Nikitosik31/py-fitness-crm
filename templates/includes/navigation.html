@@ -9,11 +9,15 @@
 
     <!-- Nav links (desktop) -->
     <nav class="crm-nav-links">
-      <a href="{% url 'fitness:clients-list' %}" class="crm-nav-link">Clients</a>
-      <a href="{% url 'fitness:trainers-list' %}" class="crm-nav-link">Trainers</a>
-      <a href="{% url 'fitness:workout-session-list' %}" class="crm-nav-link">Sessions</a>
-      <a href="{% url 'fitness:workout-program-list' %}" class="crm-nav-link">Programs</a>
-      <a href="{% url 'fitness:exercise-list' %}" class="crm-nav-link">Exercises</a>
+      {% if user.client_profile %}
+        <a href="{% url 'fitness:client-profile' %}" class="crm-nav-link">My Profile</a>
+      {% else %}
+        <a href="{% url 'fitness:clients-list' %}" class="crm-nav-link">Clients</a>
+        <a href="{% url 'fitness:trainers-list' %}" class="crm-nav-link">Trainers</a>
+        <a href="{% url 'fitness:workout-session-list' %}" class="crm-nav-link">Sessions</a>
+        <a href="{% url 'fitness:workout-program-list' %}" class="crm-nav-link">Programs</a>
+        <a href="{% url 'fitness:exercise-list' %}" class="crm-nav-link">Exercises</a>
+      {% endif %}
     </nav>
 
     <!-- Right -->
@@ -55,11 +59,15 @@
 
   <!-- Mobile menu -->
   <div class="crm-mobile-menu" id="crm-mobile-menu">
-    <a href="{% url 'fitness:clients-list' %}" class="crm-nav-link">Clients</a>
-    <a href="{% url 'fitness:trainers-list' %}" class="crm-nav-link">Trainers</a>
-    <a href="{% url 'fitness:workout-session-list' %}" class="crm-nav-link">Sessions</a>
-    <a href="{% url 'fitness:workout-program-list' %}" class="crm-nav-link">Programs</a>
-    <a href="{% url 'fitness:exercise-list' %}" class="crm-nav-link">Exercises</a>
+    {% if user.client_profile %}
+      <a href="{% url 'fitness:client-profile' %}" class="crm-nav-link">My Profile</a>
+    {% else %}
+      <a href="{% url 'fitness:clients-list' %}" class="crm-nav-link">Clients</a>
+      <a href="{% url 'fitness:trainers-list' %}" class="crm-nav-link">Trainers</a>
+      <a href="{% url 'fitness:workout-session-list' %}" class="crm-nav-link">Sessions</a>
+      <a href="{% url 'fitness:workout-program-list' %}" class="crm-nav-link">Programs</a>
+      <a href="{% url 'fitness:exercise-list' %}" class="crm-nav-link">Exercises</a>
+    {% endif %}
     {% if user.is_authenticated %}
       <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}

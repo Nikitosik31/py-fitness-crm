@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from fitness.views import (
     index,
@@ -26,7 +27,8 @@ from fitness.views import (
     WorkoutProgramDetailView,
     WorkoutProgramCreateView,
     WorkoutProgramUpdateView,
-    WorkoutProgramDeleteView, RegisterView,
+    WorkoutProgramDeleteView, RegisterView, client_create_view, redirect_after_login, ClientProfileView,
+    ProgressReportCreateView,
 )
 
 app_name = "fitness"
@@ -140,5 +142,9 @@ urlpatterns = [
         name="workout-program-delete",
     ),
     path("register/", RegisterView.as_view(), name="register"),
-
+    path("register/client/", client_create_view, name="client-register"),
+    path("register/choose/", TemplateView.as_view(template_name="registration/choose_role.html"), name="register-choose"),
+    path("redirect/", redirect_after_login, name="redirect-after-login"),
+    path("client_profile/", ClientProfileView.as_view(), name="client-profile"),
+    path("client/add-report/", ProgressReportCreateView.as_view(), name="add-report"),
 ]

@@ -1,10 +1,13 @@
+from urllib import request, response
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.urls import reverse_lazy
 from django.views import generic
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login
+from django.views.generic import DetailView
 
 from fitness.forms import (
     TrainerCreateForm,
@@ -17,20 +20,21 @@ from fitness.forms import (
     ClientSearchForm,
     ExerciseSearchForm,
     WorkoutProgramSearchForm,
-    WorkoutSessionSearchForm,
+    WorkoutSessionSearchForm, ProgressReportForm,
 )
 from fitness.models import (
     Trainer,
     Client,
     Exercise,
     WorkoutProgram,
-    WorkoutSession,
+    WorkoutSession, ProgressReport,
 )
 
 
 @login_required
 def index(request):
-    """View function for the home page of the site."""
+    if hasattr(request.user, "client_profile"):
+        return redirect("fitness:client-profile")
 
     num_trainer = Trainer.objects.count()
     num_exercise = Exercise.objects.count()
@@ -53,7 +57,14 @@ def index(request):
     return render(request, "fitness/index.html", context=context)
 
 
-class TrainersListView(LoginRequiredMixin, generic.ListView):
+class TrainerRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if hasattr(request.user, "client_profile"):
+            return redirect("fitness:client-profile")
+        return super().dispatch(request, *args, **kwargs)
+
+
+class TrainersListView(LoginRequiredMixin, TrainerRequiredMixin, generic.ListView):
     model = Trainer
     paginate_by = 5
 
@@ -77,27 +88,27 @@ class TrainersListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class TrainersCreateView(LoginRequiredMixin, generic.CreateView):
+class TrainersCreateView(LoginRequiredMixin, TrainerRequiredMixin, generic.CreateView):
     model = Trainer
     form_class = TrainerCreateForm
 
 
-class TrainersDetailView(LoginRequiredMixin, generic.DetailView):
+class TrainersDetailView(LoginRequiredMixin, TrainerRequiredMixin, generic.DetailView):
     model = Trainer
     queryset = Trainer.objects.all().prefetch_related("clients")
 
 
-class TrainersUpdateView(LoginRequiredMixin, generic.UpdateView):
+class TrainersUpdateView(LoginRequiredMixin, TrainerRequiredMixin, generic.UpdateView):
     model = Trainer
     form_class = TrainerExperienceYearsForm
 
 
-class TrainersDeleteView(LoginRequiredMixin, generic.DeleteView):
+class TrainersDeleteView(LoginRequiredMixin, TrainerRequiredMixin, generic.DeleteView):
     model = Trainer
     success_url = reverse_lazy("fitness:trainers-list")
 
 
-class ClientListView(LoginRequiredMixin, generic.ListView):
+class ClientListView(LoginRequiredMixin, TrainerRequiredMixin, generic.ListView):
     model = Client
     paginate_by = 5
 
@@ -130,12 +141,12 @@ class ClientListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class ClientCreateView(LoginRequiredMixin, generic.CreateView):
+class ClientCreateView(LoginRequiredMixin, TrainerRequiredMixin, generic.CreateView):
     model = Client
     form_class = ClientCreateForm
 
 
-class ClientDetailView(LoginRequiredMixin, generic.DetailView):
+class ClientDetailView(LoginRequiredMixin, TrainerRequiredMixin, generic.DetailView):
     model = Client
     queryset = Client.objects.prefetch_related("trainers").annotate(
         completed_workouts=Count(
@@ -151,17 +162,17 @@ class ClientDetailView(LoginRequiredMixin, generic.DetailView):
     )
 
 
-class ClientUpdateView(LoginRequiredMixin, generic.UpdateView):
+class ClientUpdateView(LoginRequiredMixin, TrainerRequiredMixin, generic.UpdateView):
     model = Client
     form_class = ClientCreateForm
 
 
-class ClientDeleteView(LoginRequiredMixin, generic.DeleteView):
+class ClientDeleteView(LoginRequiredMixin, TrainerRequiredMixin, generic.DeleteView):
     model = Client
     success_url = reverse_lazy("fitness:clients-list")
 
 
-class ExerciseListView(LoginRequiredMixin, generic.ListView):
+class ExerciseListView(LoginRequiredMixin, TrainerRequiredMixin, generic.ListView):
     model = Exercise
     paginate_by = 5
 
@@ -182,27 +193,27 @@ class ExerciseListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class ExerciseCreateView(LoginRequiredMixin, generic.CreateView):
+class ExerciseCreateView(LoginRequiredMixin, TrainerRequiredMixin, generic.CreateView):
     model = Exercise
     form_class = ExerciseCreateForm
 
 
-class ExerciseDetailView(LoginRequiredMixin, generic.DetailView):
+class ExerciseDetailView(LoginRequiredMixin, TrainerRequiredMixin, generic.DetailView):
     model = Exercise
     queryset = Exercise.objects.all()
 
 
-class ExerciseUpdateView(LoginRequiredMixin, generic.UpdateView):
+class ExerciseUpdateView(LoginRequiredMixin, TrainerRequiredMixin, generic.UpdateView):
     model = Exercise
     form_class = ExerciseCreateForm
 
 
-class ExerciseDeleteView(LoginRequiredMixin, generic.DeleteView):
+class ExerciseDeleteView(LoginRequiredMixin, TrainerRequiredMixin, generic.DeleteView):
     model = Exercise
     success_url = reverse_lazy("fitness:exercise-list")
 
 
-class WorkoutProgramListView(LoginRequiredMixin, generic.ListView):
+class WorkoutProgramListView(LoginRequiredMixin, TrainerRequiredMixin, generic.ListView):
     model = WorkoutProgram
     paginate_by = 5
     template_name = "fitness/workout_program_list.html"
@@ -226,13 +237,13 @@ class WorkoutProgramListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class WorkoutProgramCreateView(LoginRequiredMixin, generic.CreateView):
+class WorkoutProgramCreateView(LoginRequiredMixin, TrainerRequiredMixin, generic.CreateView):
     model = WorkoutProgram
     form_class = WorkoutProgramCreateForm
     template_name = "fitness/workout_program_form.html"
 
 
-class WorkoutProgramDetailView(LoginRequiredMixin, generic.DetailView):
+class WorkoutProgramDetailView(LoginRequiredMixin, TrainerRequiredMixin, generic.DetailView):
     model = WorkoutProgram
     queryset = (
         WorkoutProgram.objects.all()
@@ -242,19 +253,19 @@ class WorkoutProgramDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "fitness/workout_program_detail.html"
 
 
-class WorkoutProgramUpdateView(LoginRequiredMixin, generic.UpdateView):
+class WorkoutProgramUpdateView(LoginRequiredMixin, TrainerRequiredMixin, generic.UpdateView):
     model = WorkoutProgram
     form_class = WorkoutProgramCreateForm
     template_name = "fitness/workout_program_form.html"
 
 
-class WorkoutProgramDeleteView(LoginRequiredMixin, generic.DeleteView):
+class WorkoutProgramDeleteView(LoginRequiredMixin, TrainerRequiredMixin, generic.DeleteView):
     model = WorkoutProgram
     success_url = reverse_lazy("fitness:workout-program-list")
     template_name = "fitness/workout_program_confirm_delete.html"
 
 
-class WorkoutSessionListView(LoginRequiredMixin, generic.ListView):
+class WorkoutSessionListView(LoginRequiredMixin, TrainerRequiredMixin, generic.ListView):
     model = WorkoutSession
     paginate_by = 5
     template_name = "fitness/workout_session_list.html"
@@ -280,13 +291,13 @@ class WorkoutSessionListView(LoginRequiredMixin, generic.ListView):
         return queryset
 
 
-class WorkoutSessionCreateView(LoginRequiredMixin, generic.CreateView):
+class WorkoutSessionCreateView(LoginRequiredMixin, TrainerRequiredMixin, generic.CreateView):
     model = WorkoutSession
     form_class = WorkoutSessionCreateForm
     template_name = "fitness/workout_session_form.html"
 
 
-class WorkoutSessionDetailView(LoginRequiredMixin, generic.DetailView):
+class WorkoutSessionDetailView(LoginRequiredMixin, TrainerRequiredMixin, generic.DetailView):
     model = WorkoutSession
     queryset = WorkoutSession.objects.select_related(
         "trainer", "workout_program"
@@ -294,13 +305,13 @@ class WorkoutSessionDetailView(LoginRequiredMixin, generic.DetailView):
     template_name = "fitness/workout_session_detail.html"
 
 
-class WorkoutSessionUpdateView(LoginRequiredMixin, generic.UpdateView):
+class WorkoutSessionUpdateView(LoginRequiredMixin, TrainerRequiredMixin, generic.UpdateView):
     model = WorkoutSession
     form_class = WorkoutSessionCreateForm
     template_name = "fitness/workout_session_form.html"
 
 
-class WorkoutSessionDeleteView(LoginRequiredMixin, generic.DeleteView):
+class WorkoutSessionDeleteView(LoginRequiredMixin, TrainerRequiredMixin, generic.DeleteView):
     model = WorkoutSession
     success_url = reverse_lazy("fitness:workout-session-list")
     template_name = "fitness/workout_session_confirm_delete.html"
@@ -315,3 +326,49 @@ class RegisterView(generic.CreateView):
         response = super().form_valid(form)
         login(self.request, self.object)
         return response
+
+
+def client_create_view(request):
+    if request.method == "POST":
+        form = ClientCreateForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            Client.objects.create(
+                user=user,
+                first_name=form.cleaned_data["first_name"],
+                last_name=form.cleaned_data["last_name"],
+                age=form.cleaned_data["age"],
+                weight=form.cleaned_data["weight"],
+                goal=form.cleaned_data["goal"],
+            )
+            login(request, user)
+            return redirect("fitness:client-profile")
+    else:
+        form = ClientCreateForm()
+    return render(request, "registration/client_register.html", {"form": form})
+
+
+def redirect_after_login(request):
+    if hasattr(request.user, "client_profile"):
+        return redirect("fitness:client-profile")
+    return redirect("fitness:index")
+
+
+class ClientProfileView(LoginRequiredMixin, generic.DetailView):
+    model = Client
+    template_name = "fitness/client_profile.html"
+
+    def get_object(self):
+        return self.request.user.client_profile
+
+
+class ProgressReportCreateView(LoginRequiredMixin, generic.CreateView):
+    model = ProgressReport
+    form_class = ProgressReportForm
+    template_name = "fitness/progress_report_form.html"
+
+    def form_valid(self, form):
+        report = form.save(commit=False)
+        report.client = self.request.user.client_profile
+        report.save()
+        return redirect("fitness:client-profile")
