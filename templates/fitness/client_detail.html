@@ -4,6 +4,25 @@
 
 {% block stylesheets %}
   <link rel="stylesheet" href="{% static 'css/crm.css' %}">
+  <style>
+    .cp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-top: 16px; }
+    .cp-section-title { font-size: 14px; font-weight: 500; color: var(--text-primary); margin: 0 0 14px; }
+    .cp-charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .cp-report-list { display: flex; flex-direction: column; gap: 10px; }
+    .cp-report-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    .cp-report-date { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 10px; }
+    .cp-report-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .cp-report-field { display: flex; flex-direction: column; gap: 2px; }
+    .cp-report-field-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); }
+    .cp-report-field-value { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+    .cp-report-field-value.accent { color: #06D6A0; }
+    .cp-report-notes { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-secondary); }
+    .cp-empty { text-align: center; padding: 32px; color: var(--text-secondary); font-size: 14px; }
+    @media (max-width: 640px) {
+      .cp-charts-grid { grid-template-columns: 1fr; }
+      .cp-report-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 {% endblock stylesheets %}
 
 {% block content %}
@@ -43,12 +62,14 @@
       <div class="stat-block-label">Assigned Trainers</div>
       <div class="stat-block-value">{{ client.trainers.count }}</div>
     </div>
+    <div class="stat-block">
+      <div class="stat-block-label">Progress Reports</div>
+      <div class="stat-block-value">{{ client.reports.count }}</div>
+    </div>
   </div>
 
   <!-- Bottom -->
   <div class="bottom-grid">
-
-    <!-- Trainers -->
     <div class="info-block">
       <div class="info-block-title">Trainers</div>
       {% for trainer in client.trainers.all %}
@@ -63,21 +84,134 @@
       {% endfor %}
     </div>
 
-    <!-- Last workout + assign -->
     <div class="info-block">
       <div class="info-block-title">Last Workout</div>
       {% if client.workout_sessions.first %}
         <a href="{% url 'fitness:workout-program-detail' pk=client.workout_sessions.first.workout_program.pk %}" style="text-decoration: none; color: inherit;">
           <div class="workout-name">{{ client.workout_sessions.first }}</div>
         </a>
-          <div class="workout-date">Most recent session</div>
-
+        <div class="workout-date">Most recent session</div>
       {% else %}
         <div class="empty-text">No workouts yet.</div>
       {% endif %}
     </div>
+  </div>
 
+  <!-- Charts -->
+  {% if client.reports.exists %}
+  <div class="cp-charts-grid">
+    <div class="cp-card" style="margin-top: 0;">
+      <p class="cp-section-title">Weight progress, kg</p>
+      <canvas id="weightChart" height="140"></canvas>
+    </div>
+    <div class="cp-card" style="margin-top: 0;">
+      <p class="cp-section-title">Measurements, cm</p>
+      <canvas id="measureChart" height="140"></canvas>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Report History -->
+  <div class="cp-card">
+    <p class="cp-section-title">Report History</p>
+    {% if client.reports.exists %}
+    <div class="cp-report-list">
+      {% for report in client.reports.all %}
+      <div class="cp-report-card">
+        <p class="cp-report-date">{{ report.date }}</p>
+        <div class="cp-report-grid">
+          <div class="cp-report-field">
+            <span class="cp-report-field-label">Weight</span>
+            <span class="cp-report-field-value accent">{{ report.weight }} kg</span>
+          </div>
+          <div class="cp-report-field">
+            <span class="cp-report-field-label">Chest</span>
+            <span class="cp-report-field-value">{{ report.chest }} cm</span>
+          </div>
+          <div class="cp-report-field">
+            <span class="cp-report-field-label">Waist</span>
+            <span class="cp-report-field-value">{{ report.waist }} cm</span>
+          </div>
+          <div class="cp-report-field">
+            <span class="cp-report-field-label">Hips</span>
+            <span class="cp-report-field-value">{{ report.hips }} cm</span>
+          </div>
+          <div class="cp-report-field">
+            <span class="cp-report-field-label">Arm</span>
+            <span class="cp-report-field-value">{{ report.arm }} cm</span>
+          </div>
+        </div>
+        {% if report.notes %}
+        <div class="cp-report-notes">{{ report.notes }}</div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="cp-empty">No reports yet.</div>
+    {% endif %}
   </div>
 
 </div>
+
+{% if client.reports.exists %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  const labels = [{% for r in client.reports.all reversed %}"{{ r.date|date:'d M' }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+  const weightData = [{% for r in client.reports.all reversed %}{{ r.weight }}{% if not forloop.last %},{% endif %}{% endfor %}];
+  const chestData = [{% for r in client.reports.all reversed %}{{ r.chest }}{% if not forloop.last %},{% endif %}{% endfor %}];
+  const waistData = [{% for r in client.reports.all reversed %}{{ r.waist }}{% if not forloop.last %},{% endif %}{% endfor %}];
+  const hipsData = [{% for r in client.reports.all reversed %}{{ r.hips }}{% if not forloop.last %},{% endif %}{% endfor %}];
+  const armData = [{% for r in client.reports.all reversed %}{{ r.arm }}{% if not forloop.last %},{% endif %}{% endfor %}];
+
+  const gridColor = 'rgba(255,255,255,0.05)';
+  const textColor = '#8892A4';
+
+  new Chart(document.getElementById('weightChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: weightData,
+        borderColor: '#4361EE',
+        backgroundColor: 'rgba(67,97,238,0.08)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#4361EE',
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } },
+        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 }, callback: v => v + ' kg' } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('measureChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Chest', data: chestData, borderColor: '#06D6A0', backgroundColor: 'transparent', tension: 0.4, pointRadius: 3, borderWidth: 2 },
+        { label: 'Waist', data: waistData, borderColor: '#4361EE', backgroundColor: 'transparent', tension: 0.4, pointRadius: 3, borderWidth: 2 },
+        { label: 'Hips', data: hipsData, borderColor: '#F72585', backgroundColor: 'transparent', tension: 0.4, pointRadius: 3, borderWidth: 2 },
+        { label: 'Arm', data: armData, borderColor: '#FFB703', backgroundColor: 'transparent', tension: 0.4, pointRadius: 3, borderWidth: 2 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: textColor, font: { size: 11 }, boxWidth: 12, padding: 10 } } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } },
+        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 }, callback: v => v + ' cm' } }
+      }
+    }
+  });
+</script>
+{% endif %}
 {% endblock %}

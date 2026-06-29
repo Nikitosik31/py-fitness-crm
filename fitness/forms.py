@@ -49,12 +49,13 @@ class TrainerExperienceYearsForm(forms.ModelForm):
 
 class ClientCreateForm(forms.ModelForm):
     trainers = forms.ModelMultipleChoiceField(
-        queryset=Trainer.objects.all(), widget=forms.CheckboxSelectMultiple
+        queryset=Trainer.objects.filter(client_profile__isnull=True),
+        widget=forms.CheckboxSelectMultiple,
     )
 
     class Meta:
         model = Client
-        fields = "__all__"
+        fields = ("first_name", "last_name", "age", "weight", "goal", "trainers")
 
 
 class WorkoutProgramCreateForm(forms.ModelForm):
@@ -144,10 +145,12 @@ class WorkoutSessionSearchForm(forms.Form):
 
 
 class ClientRegisterForm(UserCreationForm):
-    age = forms.IntegerField()
-    weight = forms.DecimalField(max_digits=5, decimal_places=2)
+    age = forms.IntegerField(label=_("Age"))
+    weight = forms.DecimalField(max_digits=5, decimal_places=2, label=_("Weight (kg)"))
     goal = forms.CharField(
-        max_length=255, widget=forms.Textarea(attrs={"class": "form-control"})
+        max_length=255,
+        label=_("Goal"),
+        widget=forms.Textarea(attrs={"class": "form-control"}),
     )
 
     class Meta:

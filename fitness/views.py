@@ -397,7 +397,7 @@ def client_create_view(request):
             login(request, user)
             return redirect("fitness:client-profile")
     else:
-        form = ClientCreateForm()
+        form = ClientRegisterForm()
     return render(request, "registration/client_register.html", {"form": form})
 
 

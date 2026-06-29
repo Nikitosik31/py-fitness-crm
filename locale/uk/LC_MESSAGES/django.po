@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-29 21:03+0000\n"
+"POT-Creation-Date: 2026-06-29 21:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,39 +21,47 @@ msgstr ""
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
-#: fitness/forms.py:175
+#: fitness/forms.py:147 templates/fitness/client_profile.html:59
+msgid "Age"
+msgstr "Вік"
+
+#: fitness/forms.py:148 fitness/forms.py:177
 msgid "Weight (kg)"
 msgstr "Вага (кг)"
 
-#: fitness/forms.py:176
+#: fitness/forms.py:151 templates/fitness/client_profile.html:71
+msgid "Goal"
+msgstr "Мета"
+
+#: fitness/forms.py:178
 msgid "Chest (cm)"
 msgstr "Груди (см)"
 
-#: fitness/forms.py:177
+#: fitness/forms.py:179
 msgid "Waist (cm)"
 msgstr "Талія (см)"
 
-#: fitness/forms.py:178
+#: fitness/forms.py:180
 msgid "Hips (cm)"
 msgstr "Стегна (см)"
 
-#: fitness/forms.py:179
+#: fitness/forms.py:181
 msgid "Arm (cm)"
 msgstr "Рука (см)"
 
-#: fitness/forms.py:180
+#: fitness/forms.py:182
 msgid "Notes"
 msgstr "Нотатки"
 
-#: fitness_crm/settings/base.py:153
+#: fitness_crm/settings/base.py:152
 msgid "English"
 msgstr "Англійська"
 
-#: fitness_crm/settings/base.py:154
+#: fitness_crm/settings/base.py:153
 msgid "Ukrainian"
 msgstr "Українська"
 
-#: fitness_crm/settings/base.py:155
+#: fitness_crm/settings/base.py:154
 msgid "Russian"
 msgstr "Російська"
 
@@ -65,10 +73,6 @@ msgstr "Атлет"
 msgid "+ Add Report"
 msgstr "+ Додати звіт"
 
-#: templates/fitness/client_profile.html:59
-msgid "Age"
-msgstr "Вік"
-
 #: templates/fitness/client_profile.html:63
 #: templates/fitness/client_profile.html:98
 msgid "Weight"
@@ -77,10 +81,6 @@ msgstr "Вага"
 #: templates/fitness/client_profile.html:67
 msgid "Reports"
 msgstr "Звіти"
-
-#: templates/fitness/client_profile.html:71
-msgid "Goal"
-msgstr "Мета"
 
 #: templates/fitness/client_profile.html:79
 msgid "Weight progress, kg"
@@ -139,10 +139,38 @@ msgstr "Зберегти звіт"
 msgid "Back to Profile"
 msgstr "Назад до профілю"
 
+#: templates/registration/choose_role.html:23
 #: templates/registration/client_register.html:24
 #: templates/registration/client_register.html:42
 msgid "Create account"
 msgstr "Створити акаунт"
+
+#: templates/registration/choose_role.html:24
+msgid "Who are you?"
+msgstr "Хто ви?"
+
+#: templates/registration/choose_role.html:25
+msgid "Choose your account type to get started"
+msgstr "Оберіть тип акаунту, щоб почати"
+
+#: templates/registration/choose_role.html:30
+msgid "I'm a Trainer"
+msgstr "Я тренер"
+
+#: templates/registration/choose_role.html:33
+msgid "I'm an Athlete"
+msgstr "Я атлет"
+
+#: templates/registration/choose_role.html:38
+#: templates/registration/client_register.html:46
+msgid "Already have an account?"
+msgstr "Вже є акаунт?"
+
+#: templates/registration/choose_role.html:38
+#: templates/registration/client_register.html:46
+#: templates/registration/login.html:25 templates/registration/login.html:47
+msgid "Sign in"
+msgstr "Увійти"
 
 #: templates/registration/client_register.html:25
 msgid "Athlete Registration"
@@ -151,15 +179,6 @@ msgstr "Реєстрація атлета"
 #: templates/registration/client_register.html:26
 msgid "Fill in your details to get started"
 msgstr "Заповніть дані, щоб почати"
-
-#: templates/registration/client_register.html:46
-msgid "Already have an account?"
-msgstr "Вже є акаунт?"
-
-#: templates/registration/client_register.html:46
-#: templates/registration/login.html:25 templates/registration/login.html:47
-msgid "Sign in"
-msgstr "Увійти"
 
 #: templates/registration/login.html:24
 msgid "Welcome back"
